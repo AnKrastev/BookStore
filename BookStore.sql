@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Employee` (
   `store_store_ID` INT NOT NULL,
   `password` VARCHAR(20) NOT NULL,
   PRIMARY KEY (`employee_ID`),
-  INDEX `fk_Employee_Store1_idx` (`store_store_ID` ASC),
+  INDEX `fk_Employee_Store1_idx` (`store_store_ID` ASC) VISIBLE,
   CONSTRAINT `fk_Employee_Store1`
     FOREIGN KEY (`store_store_ID`)
     REFERENCES `mydb`.`Store` (`store_ID`)
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Book` (
   `book_price` DECIMAL(10,2) NOT NULL,
   `publisher_publisher_ID` INT NOT NULL,
   PRIMARY KEY (`book_ID`),
-  INDEX `fk_Book_Publisher1_idx` (`publisher_publisher_ID` ASC) ,
+  INDEX `fk_Book_Publisher1_idx` (`publisher_publisher_ID` ASC) VISIBLE,
   CONSTRAINT `fk_Book_Publisher1`
     FOREIGN KEY (`publisher_publisher_ID`)
     REFERENCES `mydb`.`Publisher` (`publisher_ID`)
@@ -149,8 +149,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Inventory` (
   `book_book_ID` INT NOT NULL,
   `store_store_ID` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_Inventory_Book1_idx` (`book_book_ID` ASC) ,
-  INDEX `fk_Inventory_Store1_idx` (`store_store_ID` ASC) ,
+  INDEX `fk_Inventory_Book1_idx` (`book_book_ID` ASC) VISIBLE,
+  INDEX `fk_Inventory_Store1_idx` (`store_store_ID` ASC) VISIBLE,
   CONSTRAINT `fk_Inventory_Book1`
     FOREIGN KEY (`book_book_ID`)
     REFERENCES `mydb`.`Book` (`book_ID`)
