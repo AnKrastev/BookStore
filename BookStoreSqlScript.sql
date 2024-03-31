@@ -173,9 +173,9 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `mydb`;
-INSERT INTO `mydb`.`Store` (`store_ID`, `store_name`, `store_address`, `store_phone`) VALUES (1, 'Orange', 'София Дружба 1', '0876876198');
-INSERT INTO `mydb`.`Store` (`store_ID`, `store_name`, `store_address`, `store_phone`) VALUES (2, 'Ciela', 'София Младост 2', '0877330098');
-INSERT INTO `mydb`.`Store` (`store_ID`, `store_name`, `store_address`, `store_phone`) VALUES (3, 'Ozone', 'София Люлин 3', '0877445687');
+INSERT INTO `mydb`.`Store` (`store_name`, `store_address`, `store_phone`) VALUES ('Orange', 'София Дружба 1', '0876876198');
+INSERT INTO `mydb`.`Store` (`store_name`, `store_address`, `store_phone`) VALUES ('Ciela', 'София Младост 2', '0877330098');
+INSERT INTO `mydb`.`Store` (`store_name`, `store_address`, `store_phone`) VALUES ('Ozone', 'София Люлин 3', '0877445687');
 
 COMMIT;
 
