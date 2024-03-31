@@ -30,8 +30,8 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `mydb`.`Employee` (
   `employee_ID` INT NOT NULL AUTO_INCREMENT,
   `employee_name` VARCHAR(45) NOT NULL,
-  `employee_email` VARCHAR(45) NOT NULL,
-  `employee_phone` VARCHAR(10) NOT NULL,
+  `employee_email` VARCHAR(45) NOT NULL UNIQUE,
+  `employee_phone` VARCHAR(10) NOT NULL UNIQUE,
   `employee_position` VARCHAR(45) NOT NULL,
   `store_store_ID` INT NOT NULL,
   `password` VARCHAR(20) NOT NULL,
@@ -51,8 +51,8 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `mydb`.`Customer` (
   `customer_ID` INT NOT NULL AUTO_INCREMENT,
   `customer_name` VARCHAR(45) NOT NULL,
-  `Customer_email` VARCHAR(45) NOT NULL,
-  `customer_phone` VARCHAR(10) NOT NULL,
+  `Customer_email` VARCHAR(45) NOT NULL UNIQUE,
+  `customer_phone` VARCHAR(10) NOT NULL UNIQUE,
   `password` VARCHAR(20) NOT NULL,
   PRIMARY KEY (`customer_ID`))
 ENGINE = InnoDB;
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Publisher` (
   `publisher_ID` INT NOT NULL AUTO_INCREMENT,
   `publisher_name` VARCHAR(45) NOT NULL,
   `publisher_address` VARCHAR(45) NOT NULL,
-  `publisher_phone` VARCHAR(10) NOT NULL,
+  `publisher_phone` VARCHAR(10) NOT NULL UNIQUE,
   PRIMARY KEY (`publisher_ID`))
 ENGINE = InnoDB;
 
