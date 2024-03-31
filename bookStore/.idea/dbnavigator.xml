@@ -6,7 +6,7 @@
   </component>
   <component name="DBNavigator.Project.DataEditorManager">
     <record-view-column-sorting-type value="BY_INDEX" />
-    <value-preview-text-wrapping value="true" />
+    <value-preview-text-wrapping value="false" />
     <value-preview-pinned value="false" />
   </component>
   <component name="DBNavigator.Project.DatabaseBrowserManager">
@@ -18,6 +18,7 @@
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="d32cc903-b3c7-4451-9c78-e114df947694">
       <console name="Connection" type="STANDARD" schema="" session="Main" />
+      <console name="test" type="STANDARD" schema="mydb" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
@@ -25,6 +26,9 @@
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files />
+  </component>
+  <component name="DBNavigator.Project.DatabaseSessionManager">
+    <connection id="d32cc903-b3c7-4451-9c78-e114df947694" />
   </component>
   <component name="DBNavigator.Project.ExecutionManager">
     <retain-sticky-names value="false" />
@@ -532,5 +536,9 @@
         </visibility-settings>
       </environment>
     </general-settings>
+  </component>
+  <component name="DBNavigator.Project.StatementExecutionManager">
+    <execution-variables />
+    <execution-variable-types />
   </component>
 </project>

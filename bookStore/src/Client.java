@@ -8,7 +8,7 @@ public class Client {
 
     public static void main(String[] args) throws IOException {
 
-        try (Socket socket = new Socket("HOST", 1222)) {
+        try (Socket socket = new Socket("192.168.10.100", 1222)) {
             PrintStream printToServer = new PrintStream(socket.getOutputStream());
             Scanner inputFromServer=new Scanner(socket.getInputStream());
             Scanner scanner = new Scanner(System.in);

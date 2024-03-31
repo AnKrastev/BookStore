@@ -1,5 +1,7 @@
 import java.io.PrintStream;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -21,6 +23,7 @@ public class StoreSystem {
     public void setUserList(ArrayList<User> userList) {
         this.userList = userList;
     }
+
 
     public void logIn(Socket clientSocket){
 
