@@ -24,6 +24,7 @@ public class AdminRequests extends AdminEmployeeRequests{
     Scanner inputFromClient=null;
 
 
+    /////////////////////////////////////////////////////////////SELECT REQUESTS///////////////////////////////////////
     //select request for all customers
     public void selectCustomers(Socket clientSocket) {
         System.out.println("Select all customers: ");
@@ -37,10 +38,11 @@ public class AdminRequests extends AdminEmployeeRequests{
             resultSet=ps.executeQuery();
             //getting the results and bring them out to client's screen
             while(resultSet.next()){
+                int idCustomer=resultSet.getInt("customer_ID");
                 String customerName=resultSet.getString("customer_name");
                 String customerPhone=resultSet.getString("customer_phone");
                 String customerEmail=resultSet.getString("Customer_email");
-                printToClient.println(customerName+" "+customerPhone+" "+customerEmail);
+                printToClient.println(idCustomer+" "+customerName+" "+customerPhone+" "+customerEmail);
             }
         }catch(SQLException e){
             System.out.println("Ima problem");
@@ -50,6 +52,40 @@ public class AdminRequests extends AdminEmployeeRequests{
     }
 
 
+
+
+    //SELECT EMPLOYEE
+    public void selectEmployee(Socket clientSocket){
+        printToClient.println("All employees are: ");
+                try{
+                    printToClient=new PrintStream(clientSocket.getOutputStream());
+                    connection=MySQLConnection.connection();
+                    String sql="SELECT * FROM employee";
+                    ps=connection.prepareStatement(sql);
+                    resultSet= ps.executeQuery();
+                    while(resultSet.next()){
+                        int idEmployee=resultSet.getInt("employee_ID");
+                        String emailEmployee=resultSet.getString("employee_email");
+                        String nameEmployee=resultSet.getString("employee_name");
+                        String phoneEmployee=resultSet.getString("employee_phone");
+                        String positionEmployee=resultSet.getString("employee_position");
+                        String passwordEmployee=resultSet.getString("password");
+                        int idStore=resultSet.getInt("store_store-ID");
+                        printToClient.println(idEmployee+" "+emailEmployee+" "+nameEmployee+" "+phoneEmployee+" "+positionEmployee+" "+passwordEmployee+" "+idStore);
+                    }
+                    System.out.println("Select employees ei successful");
+                }catch (IOException e){
+                    System.out.println(e.getMessage());
+                    printToClient.println("Error with select employees");
+                }catch (Exception e){
+                    System.out.println(e.getMessage());
+                    printToClient.println("Error");
+                }
+    }
+
+
+
+    ////////////////////////////////////////////////////////////////DELETE REQUESTS//////////////////////////////////////
 
     //delete reduction
     public void deleteReduction(Socket clientSocket) {
@@ -74,7 +110,7 @@ public class AdminRequests extends AdminEmployeeRequests{
     }
 
 
-
+////////////////////////////////////////////////////////////////////CREATE REQUESTS////////////////////////////////////////////////////////////
     //create admin
     public void createAdmin(Socket clientSocket){
         printToClient.println("Create new Admin....");
@@ -115,6 +151,20 @@ public class AdminRequests extends AdminEmployeeRequests{
         }
 
     }
+
+
+
+
+
+    ////////////////////////////////////////////////EDIT REQUESTS/////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
 
 
 }

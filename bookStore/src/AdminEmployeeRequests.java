@@ -23,7 +23,7 @@ public class AdminEmployeeRequests {
     private Scanner inputFromClient=null;
 
 
-
+////////////////////////////////////////////////////////////////////////SELECT REQUESTS/////////////////////////////////////////////
 
     //Select all products from table BOOK
     public void selectProduct(Socket clientSocket){
@@ -55,6 +55,68 @@ public class AdminEmployeeRequests {
     }
 
 
+
+//SELECT ALL PRODUCTS
+    public void selectReduction(Socket clientSocket){
+        printToClient.println("All reductions: ");
+        try{
+            printToClient=new PrintStream(clientSocket.getOutputStream());
+            connection=MySQLConnection.connection();
+            String sql="SELECT * FROM reduction";
+            ps=connection.prepareStatement(sql);
+            rs=ps.executeQuery();
+            while(rs.next()){
+                int idReduction=rs.getInt("id");
+                Date startDate=rs.getDate("startDate");
+                Date endDate=rs.getDate("endDate");
+                int percentReduction=rs.getInt("percentReduction");
+                printToClient.println(idReduction+" "+startDate+" "+endDate+" "+percentReduction);
+            }
+            System.out.println("Select of reductions is successful");
+        }catch(IOException e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error with select reduction");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+    }
+
+
+    //SELECT STORE
+    public void selectStore(Socket clientSocket){
+        printToClient.println("All stores: ");
+        try{
+            printToClient=new PrintStream(clientSocket.getOutputStream());
+            connection=MySQLConnection.connection();
+            String sql="SELECT * FROM store";
+            ps=connection.prepareStatement(sql);
+            rs=ps.executeQuery();
+            while(rs.next()){
+                int idStore=rs.getInt("store_ID");
+                String addressStore=rs.getString("store_address");
+                String nameStore=rs.getString("store_name");
+                String phoneStore=rs.getString("store_phone");
+                printToClient.println(idStore+" "+addressStore+" "+nameStore+" "+phoneStore);
+            }
+            System.out.println("Select of stores is successful");
+        }catch(IOException e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error with select store");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+    }
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////EDIT REQUESTS///////////////////////////////////////////////////
     //edit book
     public void editProducts(Socket clientSocket){
         printToClient.println("Edit price of Products");
@@ -81,7 +143,7 @@ public class AdminEmployeeRequests {
             printToClient.println("Error");
         }
     }
-    
+
 
     //edit reduction
     public void editReduction(Socket clientSocket){
