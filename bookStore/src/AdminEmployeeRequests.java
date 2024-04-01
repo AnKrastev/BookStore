@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
 
 public class AdminEmployeeRequests {
 
@@ -122,6 +123,7 @@ public class AdminEmployeeRequests {
         printToClient.println("Edit price of Products");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
+            inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             String sql="UPDATE book SET book_price=? WHERE book_ID=?";
             ps=connection.prepareStatement(sql);
@@ -150,6 +152,7 @@ public class AdminEmployeeRequests {
         printToClient.println("Edit reduction: ");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
+            inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             String sql="UPDATE reduction SET startDate=?, endDate=?, percentReduction=? WHERE id=?";
             ps=connection.prepareStatement(sql);
@@ -189,6 +192,47 @@ public class AdminEmployeeRequests {
 
 
     }
+
+
+
+ ////////////////////////////////////////////////////ADD REDUCTION//////////////////////////////////////////////////////
+
+    public void addReduction(Socket clientSocket){
+        printToClient.println("Add reduction: ");
+        try{
+            printToClient=new PrintStream(clientSocket.getOutputStream());
+            inputFromClient=new Scanner(clientSocket.getInputStream());
+            connection=MySQLConnection.connection();
+            String sql="INSERT INTO reduction(endDate,percentReduction,startDate) VALUES(?,?,?)";
+            ps=connection.prepareStatement(sql);
+            //input value in variable
+            printToClient.println("Enter startDate: ");
+            String startDate=inputFromClient.next();
+            SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+            Date startDateReduction=simpleDateFormat.parse(startDate);
+            printToClient.println("Enter endDate: ");
+            String endDate=inputFromClient.next();
+            SimpleDateFormat simpleDateFormat2=new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+            Date endDateReduction=simpleDateFormat2.parse(endDate);
+            printToClient.println("Enter percent of reduction");
+            int percentReduction=inputFromClient.nextInt();
+            //insert the values in database
+            ps.setDate(1, (java.sql.Date) startDateReduction);
+            ps.setInt(2,percentReduction);
+            ps.setDate(3, (java.sql.Date) endDateReduction);
+            ps.execute();
+            System.out.println("added is successful");
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error with add reduction");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+    }
+
+
+
 
 
 
