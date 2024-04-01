@@ -29,15 +29,15 @@ public class StoreSystem {
         try {
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
-            RequestsToDatabase requestsToDatabase = new RequestsToDatabase();
+            AdminRequests adminRequests = new AdminRequests();
             printToClient.println("Choose option\n1-Select all from customers\n2-Delete customers");
             int option = inputFromClient.nextInt();
             switch (option) {
                 case 1:
-                    requestsToDatabase.select(clientSocket);
+                    adminRequests.selectCustomers(clientSocket);
                     break;
                 case 2:
-                    requestsToDatabase.deleteReduction(clientSocket);
+                    adminRequests.deleteReduction(clientSocket);
                     break;
             }
         }catch (IOException e){
