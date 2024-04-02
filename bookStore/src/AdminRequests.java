@@ -28,8 +28,8 @@ public class AdminRequests extends AdminEmployeeRequests{
 
     /////////////////////////////////////////////////////////////SELECT REQUESTS///////////////////////////////////////
     //select request for all customers
+    //works
     public void selectCustomers(Socket clientSocket) {
-        System.out.println("Select all customers: ");
         try{
             //initialization the objects
             printToClient=new PrintStream(clientSocket.getOutputStream());
@@ -38,6 +38,7 @@ public class AdminRequests extends AdminEmployeeRequests{
             String sqlScript="SELECT * FROM customer";
             ps=connection.prepareStatement(sqlScript);
             resultSet=ps.executeQuery();
+            printToClient.println("Select all customers: ");
             //getting the results and bring them out to client's screen
             while(resultSet.next()){
                 int idCustomer=resultSet.getInt("customer_ID");
@@ -57,14 +58,15 @@ public class AdminRequests extends AdminEmployeeRequests{
 
 
     //SELECT EMPLOYEE
+    //works
     public void selectEmployee(Socket clientSocket){
-        printToClient.println("All employees are: ");
                 try{
                     printToClient=new PrintStream(clientSocket.getOutputStream());
                     connection=MySQLConnection.connection();
                     String sql="SELECT * FROM employee";
                     ps=connection.prepareStatement(sql);
                     resultSet= ps.executeQuery();
+                    printToClient.println("All employees are: ");
                     while(resultSet.next()){
                         int idEmployee=resultSet.getInt("employee_ID");
                         String emailEmployee=resultSet.getString("employee_email");
@@ -72,7 +74,7 @@ public class AdminRequests extends AdminEmployeeRequests{
                         String phoneEmployee=resultSet.getString("employee_phone");
                         String positionEmployee=resultSet.getString("employee_position");
                         String passwordEmployee=resultSet.getString("password");
-                        int idStore=resultSet.getInt("store_store-ID");
+                        int idStore=resultSet.getInt("store_store_ID");
                         printToClient.println(idEmployee+" "+emailEmployee+" "+nameEmployee+" "+phoneEmployee+" "+positionEmployee+" "+passwordEmployee+" "+idStore);
                     }
                     System.out.println("Select employees ei successful");
@@ -90,6 +92,7 @@ public class AdminRequests extends AdminEmployeeRequests{
     ////////////////////////////////////////////////////////////////DELETE REQUESTS//////////////////////////////////////
 
     //delete reduction
+    //works
     public void deleteReduction(Socket clientSocket) {
         try{
             //initialization the objects
@@ -112,14 +115,15 @@ public class AdminRequests extends AdminEmployeeRequests{
     }
 
     //delete employee
+    //works
     public void deleteEmoployee(Socket clientSocket){
-        printToClient.println("delete employee.....");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             String sql="DELETE FROM employee WHERE employee_ID=?";
             ps=connection.prepareStatement(sql);
+            printToClient.println("delete employee.....");
             printToClient.println("Enter id of employee which you want to be delete");
             int idEmployee=inputFromClient.nextInt();
             ps.setInt(1,idEmployee);
@@ -136,14 +140,15 @@ public class AdminRequests extends AdminEmployeeRequests{
     }
 
 //delete store
+    //works
     public void deleteStore(Socket clientSocket){
-        printToClient.println("Delete store.....");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             String sql="DELETE FROM store WHERE store_ID=?";
             ps=connection.prepareStatement(sql);
+            printToClient.println("Delete store.....");
             printToClient.println("Enter id of store which has been deleted");
             int idStore=inputFromClient.nextInt();
             ps.setInt(1,idStore);
@@ -162,14 +167,15 @@ public class AdminRequests extends AdminEmployeeRequests{
 
 
     //delete
+    //works
     public void deleteBook(Socket clientSocket){
-        printToClient.println("Delete book.....");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             String sql="DELETE FROM book WHERE book_ID=?";
             ps=connection.prepareStatement(sql);
+            printToClient.println("Delete book.....");
             printToClient.println("ENter book's id for deleting book: ");
             int idBook=inputFromClient.nextInt();
             ps.setInt(1,idBook);
@@ -187,14 +193,15 @@ public class AdminRequests extends AdminEmployeeRequests{
 
 
     //delete customer
+    //works
     public void deleteCustomer(Socket clientSocket){
-        printToClient.println("Delete customer....");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             String sql="DELETE FROM customer WHERE customer_ID=?";
             ps=connection.prepareStatement(sql);
+            printToClient.println("Delete customer....");
             printToClient.println("Enter customer id for deleting: ");
             int idCustomer=inputFromClient.nextInt();
             ps.setInt(1,idCustomer);
@@ -230,23 +237,24 @@ public class AdminRequests extends AdminEmployeeRequests{
 
 ////////////////////////////////////////////////////////////////////CREATE REQUESTS////////////////////////////////////////////////////////////
     //create admin
+    //works
     public void createAdmin(Socket clientSocket){
-        printToClient.println("Create new Admin....");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
-            String sql="INSERT INTO employee(employee_email=?,employee_name=?,employee_phone=?,employee_position=?,password=?,store_store_ID=?";
+            String sql="INSERT INTO employee(employee_email,employee_name,employee_phone,employee_position,password,store_store_ID) VALUES(?,?,?,?,?,?)";
             ps=connection.prepareStatement(sql);
+            printToClient.println("Create new Admin....");
             //enter staff to the variables
             printToClient.println("Enter email: ");
-            String adminEmail=inputFromClient.next();
+            String adminEmail=inputFromClient.nextLine();
             printToClient.println("Enter name: ");
-            String adminName=inputFromClient.next();
+            String adminName=inputFromClient.nextLine();
             printToClient.println("Phone: ");
-            String adminPhone=inputFromClient.next();
+            String adminPhone=inputFromClient.nextLine();
             //Enter variable Position with const Staff=admin(It can't change)
-            String adminPosition="admin";
+            String adminPosition="Админ";
             printToClient.println("Password: ");
             String adminPassword=inputFromClient.next();
             printToClient.println("Enter number of magazine: ");
@@ -272,24 +280,25 @@ public class AdminRequests extends AdminEmployeeRequests{
 
 
 //create employee
+    //works
     public void createEmployee(Socket clientSocket){
-        printToClient.println("Create employee");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             String sql="INSERT INTO employee(employee_email,employee_name,employee_phone,employee_position,password,store_store_ID) VALUES(?,?,?,?,?,?)";
             ps=connection.prepareStatement(sql);
+            printToClient.println("Create employee");
             printToClient.println("Enter employee's email: ");
-            String emailEmployee=inputFromClient.next();
+            String emailEmployee=inputFromClient.nextLine();
             printToClient.println("Enter employee's name: ");
-            String nameEmployee=inputFromClient.next();
+            String nameEmployee=inputFromClient.nextLine();
             printToClient.println("Enter phone of employee: ");
-            String phoneEmployee=inputFromClient.next();
+            String phoneEmployee=inputFromClient.nextLine();
             printToClient.println("Enter position of employee: ");
-            String positionEmployee=inputFromClient.next();
+            String positionEmployee=inputFromClient.nextLine();
             printToClient.println("Enter password of employee: ");
-            String passwordEmployee=inputFromClient.next();
+            String passwordEmployee=inputFromClient.nextLine();
             printToClient.println("Enter id of magazine where employee works: ");
             int idStoreEmployee=inputFromClient.nextInt();
             ps.setString(1,emailEmployee);
@@ -297,7 +306,7 @@ public class AdminRequests extends AdminEmployeeRequests{
             ps.setString(3,phoneEmployee);
             //we set this condition because just admin can have position ADMIN
             //if any other worker's position is ADMIN this code will not work
-            if(!positionEmployee.equals("admin")) {
+            if(!positionEmployee.equals("Админ")) {
                 ps.setString(4, positionEmployee);
             }
             ps.setString(5,passwordEmployee);
@@ -317,20 +326,21 @@ public class AdminRequests extends AdminEmployeeRequests{
 
 
     //create store
+    //works
     public void createStore(Socket clientSocket){
-        printToClient.println("create new store: ");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             String sql="INSERT INTO store(store_address,store_name,store_phone) VALUES(?,?,?)";
             ps=connection.prepareStatement(sql);
+            printToClient.println("create new store: ");
             printToClient.println("Enter address of store: ");
-            String addressStore=inputFromClient.next();
+            String addressStore=inputFromClient.nextLine();
             printToClient.println("Enter name of store: ");
-            String nameStore=inputFromClient.next();
+            String nameStore=inputFromClient.nextLine();
             printToClient.println("Enter phone of store: ");
-            String phoneStore= inputFromClient.next();
+            String phoneStore= inputFromClient.nextLine();
             ps.setString(1,addressStore);
             ps.setString(2,nameStore);
             ps.setString(3,phoneStore);
@@ -348,16 +358,17 @@ public class AdminRequests extends AdminEmployeeRequests{
 
 
     //create book
+    //works
     public void createBook(Socket clientSocket){
-        printToClient.println("Create product: ");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             String sql="INSERT INTO book(book_author,book_price,book_publisher,book_title,publisher_publisher_ID) VALUES(?,?,?,?,?)";
             ps=connection.prepareStatement(sql);
+            printToClient.println("Create product: ");
             printToClient.println("Enter author of book: ");
-            String bookAuthor=inputFromClient.next();
+            String bookAuthor=inputFromClient.nextLine();
             printToClient.println("Enter price of book: ");
             double priceBook=inputFromClient.nextDouble();
             printToClient.println("Enter publisher of book: ");
@@ -385,22 +396,23 @@ public class AdminRequests extends AdminEmployeeRequests{
 
 
     //create customer
+    //works
     public void createCustomer(Socket clientSocket){
-        printToClient.println("Create customer....");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             String sql="INSERT INTO customer(Customer_email,customer_name,customer_phone,password) VALUES(?,?,?,?)";
             ps=connection.prepareStatement(sql);
+            printToClient.println("Create customer....");
             printToClient.println("Enter email of customer: ");
-            String emailCustomer=inputFromClient.next();
+            String emailCustomer=inputFromClient.nextLine();
             printToClient.println("Enter name of customer: ");
-            String nameCustomer=inputFromClient.next();
+            String nameCustomer=inputFromClient.nextLine();
             printToClient.println("Enter phone of customer: ");
-            String phoneCustomer=inputFromClient.next();
+            String phoneCustomer=inputFromClient.nextLine();
             printToClient.println("Enter password of customer: ");
-            String passwordCustomer=inputFromClient.next();
+            String passwordCustomer=inputFromClient.nextLine();
             ps.setString(1,emailCustomer);
             ps.setString(2,nameCustomer);
             ps.setString(3,phoneCustomer);
@@ -424,22 +436,23 @@ public class AdminRequests extends AdminEmployeeRequests{
     ////////////////////////////////////////////////EDIT REQUESTS/////////////////////////////////////////////////////////////////////
 
 //edit customer
+    //works
     public void editCustomer(Socket clientSocket){
-        printToClient.println("Edit customer.....");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             String sql="UPDATE customer SET Customer_email=?,customer_name=?,customer_phone=?,password=? WHERE customer_ID=?";
             ps=connection.prepareStatement(sql);
+            printToClient.println("Edit customer.....");
             printToClient.println("Enter email of customer: ");
-            String emailCustomer=inputFromClient.next();
+            String emailCustomer=inputFromClient.nextLine();
             printToClient.println("Enter name of customer: ");
-            String nameCustomer=inputFromClient.next();
+            String nameCustomer=inputFromClient.nextLine();
             printToClient.println("Enter phone of customer: ");
-            String phoneCustomer=inputFromClient.next();
+            String phoneCustomer=inputFromClient.nextLine();
             printToClient.println("Enter password of customer:");
-            String passwordCustomer=inputFromClient.next();
+            String passwordCustomer=inputFromClient.nextLine();
             printToClient.println("Enter id of customer which will been change");
             int idCustomer=inputFromClient.nextInt();
             ps.setString(1,emailCustomer);
@@ -462,32 +475,36 @@ public class AdminRequests extends AdminEmployeeRequests{
 
 
     //edit employee
+    //works
     public void editEmployee(Socket clientSocket){
-        printToClient.println("Edit employee..... ");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             String sql="UPDATE employee SET employee_email=?,employee_name=?,employee_phone=?,employee_position=?,password=?,store_store_ID=? WHERE employee_ID=?";
             ps=connection.prepareStatement(sql);
+            printToClient.println("Edit employee..... ");
             printToClient.println("Enter employee's email: ");
-            String emailEmployee=inputFromClient.next();
+            String emailEmployee=inputFromClient.nextLine();
             printToClient.println("Enter employee's name: ");
-            String nameEmployee=inputFromClient.next();
+            String nameEmployee=inputFromClient.nextLine();
             printToClient.println("Enter employee's phone: ");
-            String phoneEmployee=inputFromClient.next();
+            String phoneEmployee=inputFromClient.nextLine();
             printToClient.println("Enter employee's position: ");
-            String positionEmployee=inputFromClient.next();
+            String positionEmployee=inputFromClient.nextLine();
             printToClient.println("Enter employee's password: ");
-            String passwordEmployee=inputFromClient.next();
+            String passwordEmployee=inputFromClient.nextLine();
             printToClient.println("Enter employee's id store where he works");
             int idStoreEmployee=inputFromClient.nextInt();
+            printToClient.println("Enter id of Employee which will bi change");
+            int idEmployee=inputFromClient.nextInt();
             ps.setString(1,emailEmployee);
             ps.setString(2,nameEmployee);
             ps.setString(3,phoneEmployee);
             ps.setString(4,positionEmployee);
             ps.setString(5,passwordEmployee);
             ps.setInt(6,idStoreEmployee);
+            ps.setInt(7,idEmployee);
             ps.execute();
             System.out.println("Editing employee is successful");
             printToClient.println("Editing employee is successful");

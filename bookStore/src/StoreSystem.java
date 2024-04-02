@@ -25,7 +25,7 @@ public class StoreSystem {
 
 
     public void logIn(Socket clientSocket){
-
+/*
         try {
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
@@ -43,6 +43,39 @@ public class StoreSystem {
         }catch (IOException e){
             System.out.println(e.getMessage());
         }
+        */
+
+
+        //Do admin and employee's requests work?
+        AdminEmployeeRequests adminEmployeeRequests=new AdminEmployeeRequests();
+        //adminEmployeeRequests.selectProduct(clientSocket);
+        //adminEmployeeRequests.selectReduction(clientSocket);
+        //adminEmployeeRequests.selectStore(clientSocket);
+        //adminEmployeeRequests.editProducts(clientSocket);
+
+
+        //Do admin's requests work?
+        AdminRequests adminRequests=new AdminRequests();
+       // adminRequests.selectCustomers(clientSocket);
+       // adminRequests.selectEmployee(clientSocket);
+        //adminRequests.createAdmin(clientSocket);
+       // adminRequests.createEmployee(clientSocket);
+        //adminRequests.createStore(clientSocket);
+        //adminRequests.createBook(clientSocket);
+        //adminRequests.createCustomer(clientSocket);
+        //adminRequests.editCustomer(clientSocket);
+        //adminRequests.editEmployee(clientSocket);
+        //adminRequests.deleteReduction(clientSocket);
+        //adminRequests.deleteEmoployee(clientSocket);
+        //adminRequests.deleteStore(clientSocket);
+        //adminRequests.deleteBook(clientSocket);
+        //adminRequests.deleteCustomer(clientSocket);
+
+
+        CustomerRequests customerRequests=new CustomerRequests();
+        //customerRequests.selectProduct(clientSocket);
+       // customerRequests.bookFilterBetweenTwoPrices(clientSocket);
+        customerRequests.sortBooks(clientSocket);
 
     }
 

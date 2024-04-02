@@ -27,8 +27,8 @@ public class AdminEmployeeRequests {
 ////////////////////////////////////////////////////////////////////////SELECT REQUESTS/////////////////////////////////////////////
 
     //Select all products from table BOOK
+    //Works
     public void selectProduct(Socket clientSocket){
-        printToClient.println("All products are: ");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             connection=MySQLConnection.connection();
@@ -36,6 +36,7 @@ public class AdminEmployeeRequests {
             ps=connection.prepareStatement(sql);
             //get results and show them to the client
             rs=ps.executeQuery();
+            printToClient.println("All products are: ");
             while(rs.next()){
                 int bookID= rs.getInt("book_ID");
                 String bookAuthor=rs.getString("book_author");
@@ -58,14 +59,15 @@ public class AdminEmployeeRequests {
 
 
 //SELECT ALL PRODUCTS
+    //works
     public void selectReduction(Socket clientSocket){
-        printToClient.println("All reductions: ");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             connection=MySQLConnection.connection();
             String sql="SELECT * FROM reduction";
             ps=connection.prepareStatement(sql);
             rs=ps.executeQuery();
+            printToClient.println("All reductions: ");
             while(rs.next()){
                 int idReduction=rs.getInt("id");
                 Date startDate=rs.getDate("startDate");
@@ -85,14 +87,15 @@ public class AdminEmployeeRequests {
 
 
     //SELECT STORE
+    //works
     public void selectStore(Socket clientSocket){
-        printToClient.println("All stores: ");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             connection=MySQLConnection.connection();
             String sql="SELECT * FROM store";
             ps=connection.prepareStatement(sql);
             rs=ps.executeQuery();
+            printToClient.println("All stores: ");
             while(rs.next()){
                 int idStore=rs.getInt("store_ID");
                 String addressStore=rs.getString("store_address");
@@ -119,14 +122,15 @@ public class AdminEmployeeRequests {
 
 ////////////////////////////////////////////////////////////////EDIT REQUESTS///////////////////////////////////////////////////
     //edit book
+    //works
     public void editProducts(Socket clientSocket){
-        printToClient.println("Edit price of Products");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             String sql="UPDATE book SET book_price=? WHERE book_ID=?";
             ps=connection.prepareStatement(sql);
+            printToClient.println("Edit price of Products");
             //set staff to the variables
             printToClient.println("Enter bookId: ");
             int bookID=inputFromClient.nextInt();
@@ -148,26 +152,27 @@ public class AdminEmployeeRequests {
 
 
     //edit reduction
+    //doesn't work
     public void editReduction(Socket clientSocket){
-        printToClient.println("Edit reduction: ");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             String sql="UPDATE reduction SET startDate=?, endDate=?, percentReduction=? WHERE id=?";
             ps=connection.prepareStatement(sql);
+            printToClient.println("Edit reduction: ");
             //set staff to variables
             //set Date
             printToClient.println("Enter startDate of reduction: ");
             String firstDate=inputFromClient.next();
             //Instantiating the SimpleDateFormat class
-            SimpleDateFormat simpleFirstDate=new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+            SimpleDateFormat simpleFirstDate=new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
             //Parsing the given String to Date object
             Date firstDateReduction=simpleFirstDate.parse(firstDate);
             //set second date
             printToClient.println("Enter second date of reduction: ");
             String secondDate=inputFromClient.next();
-            SimpleDateFormat simpleSecondDate=new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+            SimpleDateFormat simpleSecondDate=new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
             Date secondDateReduction=simpleSecondDate.parse(secondDate);
             //others variable
             printToClient.println("Enter new percent of reduction: ");
@@ -196,15 +201,15 @@ public class AdminEmployeeRequests {
 
 
  ////////////////////////////////////////////////////ADD REDUCTION//////////////////////////////////////////////////////
-
+//doesn't work
     public void addReduction(Socket clientSocket){
-        printToClient.println("Add reduction: ");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             String sql="INSERT INTO reduction(endDate,percentReduction,startDate) VALUES(?,?,?)";
             ps=connection.prepareStatement(sql);
+            printToClient.println("Add reduction: ");
             //input value in variable
             printToClient.println("Enter startDate: ");
             String startDate=inputFromClient.next();

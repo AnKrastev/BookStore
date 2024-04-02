@@ -24,13 +24,14 @@ public class CustomerRequests {
     //////////////////////////////////////////SELECT REQUESTS////////////////////////////////////////////////////////
 
     //select book
+    //works
     public void selectProduct(Socket clientSocket){
-        printToClient.println("All products are: ");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             connection=MySQLConnection.connection();
             String sql="SELECT * FROM book";
             ps=connection.prepareStatement(sql);
+            printToClient.println("All products are: ");
             //get results and show them to the client
             rs=ps.executeQuery();
             while(rs.next()){
@@ -60,14 +61,15 @@ public class CustomerRequests {
 
 
     //filters books which are between two prices
+    //works
     public void bookFilterBetweenTwoPrices(Socket clientSocket){
-        printToClient.println("Filters product between two prices....");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             String sql="SELECT * FROM book WHERE book_price BETWEEN ? AND ?";
             ps=connection.prepareStatement(sql);
+            printToClient.println("Filters product between two prices....");
             printToClient.println("Enter min price of product: ");
             double minPrice=inputFromClient.nextDouble();
             printToClient.println("Enter max price of product: ");
@@ -98,14 +100,15 @@ public class CustomerRequests {
 
 
     //sorted books by price
+    //works
     public void sortBooks(Socket clientSocket){
-        printToClient.println("Sort books....");
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             String sql="SELECT * FROM book ORDER BY book_price";
             ps=connection.prepareStatement(sql);
+            printToClient.println("Sort books....");
             rs= ps.executeQuery();
             while(rs.next()){
                 int bookId=rs.getInt("book_ID");
