@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 
 public class AdminRequests extends AdminEmployeeRequests{
 
@@ -133,6 +134,97 @@ public class AdminRequests extends AdminEmployeeRequests{
             printToClient.println("Error");
         }
     }
+
+//delete store
+    public void deleteStore(Socket clientSocket){
+        printToClient.println("Delete store.....");
+        try{
+            printToClient=new PrintStream(clientSocket.getOutputStream());
+            inputFromClient=new Scanner(clientSocket.getInputStream());
+            connection=MySQLConnection.connection();
+            String sql="DELETE FROM store WHERE store_ID=?";
+            ps=connection.prepareStatement(sql);
+            printToClient.println("Enter id of store which has been deleted");
+            int idStore=inputFromClient.nextInt();
+            ps.setInt(1,idStore);
+            ps.execute();
+            System.out.println("Deleting store is successful");
+            printToClient.println("Deleting store is successful");
+        }catch(IOException e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error with deleting store");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+    }
+
+
+
+    //delete
+    public void deleteBook(Socket clientSocket){
+        printToClient.println("Delete book.....");
+        try{
+            printToClient=new PrintStream(clientSocket.getOutputStream());
+            inputFromClient=new Scanner(clientSocket.getInputStream());
+            connection=MySQLConnection.connection();
+            String sql="DELETE FROM book WHERE book_ID=?";
+            ps=connection.prepareStatement(sql);
+            printToClient.println("ENter book's id for deleting book: ");
+            int idBook=inputFromClient.nextInt();
+            ps.setInt(1,idBook);
+            ps.execute();
+            System.out.println("Deleting book is successful");
+            printToClient.println("Deleting book is successful");
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error with deleting book");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+    }
+
+
+    //delete customer
+    public void deleteCustomer(Socket clientSocket){
+        printToClient.println("Delete customer....");
+        try{
+            printToClient=new PrintStream(clientSocket.getOutputStream());
+            inputFromClient=new Scanner(clientSocket.getInputStream());
+            connection=MySQLConnection.connection();
+            String sql="DELETE FROM customer WHERE customer_ID=?";
+            ps=connection.prepareStatement(sql);
+            printToClient.println("Enter customer id for deleting: ");
+            int idCustomer=inputFromClient.nextInt();
+            ps.setInt(1,idCustomer);
+            ps.execute();
+            System.out.println("Deleting customer is successful");
+            printToClient.println("Deleting customer is successful");
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error with deleting customer");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -329,30 +421,84 @@ public class AdminRequests extends AdminEmployeeRequests{
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ////////////////////////////////////////////////EDIT REQUESTS/////////////////////////////////////////////////////////////////////
 
+//edit customer
+    public void editCustomer(Socket clientSocket){
+        printToClient.println("Edit customer.....");
+        try{
+            printToClient=new PrintStream(clientSocket.getOutputStream());
+            inputFromClient=new Scanner(clientSocket.getInputStream());
+            connection=MySQLConnection.connection();
+            String sql="UPDATE customer SET Customer_email=?,customer_name=?,customer_phone=?,password=? WHERE customer_ID=?";
+            ps=connection.prepareStatement(sql);
+            printToClient.println("Enter email of customer: ");
+            String emailCustomer=inputFromClient.next();
+            printToClient.println("Enter name of customer: ");
+            String nameCustomer=inputFromClient.next();
+            printToClient.println("Enter phone of customer: ");
+            String phoneCustomer=inputFromClient.next();
+            printToClient.println("Enter password of customer:");
+            String passwordCustomer=inputFromClient.next();
+            printToClient.println("Enter id of customer which will been change");
+            int idCustomer=inputFromClient.nextInt();
+            ps.setString(1,emailCustomer);
+            ps.setString(2,nameCustomer);
+            ps.setString(3,phoneCustomer);
+            ps.setString(4,passwordCustomer);
+            ps.setInt(5,idCustomer);
+            ps.execute();
+            System.out.println("Edit customer is successful");
+            printToClient.println("Edit customer is successful");
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error with edit customer");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+    }
 
 
 
-
+    //edit employee
+    public void editEmployee(Socket clientSocket){
+        printToClient.println("Edit employee..... ");
+        try{
+            printToClient=new PrintStream(clientSocket.getOutputStream());
+            inputFromClient=new Scanner(clientSocket.getInputStream());
+            connection=MySQLConnection.connection();
+            String sql="UPDATE employee SET employee_email=?,employee_name=?,employee_phone=?,employee_position=?,password=?,store_store_ID=? WHERE employee_ID=?";
+            ps=connection.prepareStatement(sql);
+            printToClient.println("Enter employee's email: ");
+            String emailEmployee=inputFromClient.next();
+            printToClient.println("Enter employee's name: ");
+            String nameEmployee=inputFromClient.next();
+            printToClient.println("Enter employee's phone: ");
+            String phoneEmployee=inputFromClient.next();
+            printToClient.println("Enter employee's position: ");
+            String positionEmployee=inputFromClient.next();
+            printToClient.println("Enter employee's password: ");
+            String passwordEmployee=inputFromClient.next();
+            printToClient.println("Enter employee's id store where he works");
+            int idStoreEmployee=inputFromClient.nextInt();
+            ps.setString(1,emailEmployee);
+            ps.setString(2,nameEmployee);
+            ps.setString(3,phoneEmployee);
+            ps.setString(4,positionEmployee);
+            ps.setString(5,passwordEmployee);
+            ps.setInt(6,idStoreEmployee);
+            ps.execute();
+            System.out.println("Editing employee is successful");
+            printToClient.println("Editing employee is successful");
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error with editing employee");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+    }
 
 
 
