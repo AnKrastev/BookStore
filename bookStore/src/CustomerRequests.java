@@ -131,7 +131,7 @@ public class CustomerRequests {
 /////////////////////////////////////////REGISTER FORM/////////////////////////////////
 //register form
 //works
-public void registerForm(Socket clientSocket){
+public boolean registerForm(Socket clientSocket){
     try{
         printToClient=new PrintStream(clientSocket.getOutputStream());
         inputFromClient=new Scanner(clientSocket.getInputStream());
@@ -160,6 +160,7 @@ public void registerForm(Socket clientSocket){
         ps.execute();
         System.out.println("Create customer is successful");
         printToClient.println("Create customer is successful");
+        return true;
     }catch (IOException e){
         System.out.println(e.getMessage());
         printToClient.println("Error with create customer");
@@ -167,6 +168,7 @@ public void registerForm(Socket clientSocket){
         System.out.println(e.getMessage());
         printToClient.println("Error");
     }
+    return false;
 }
 
 

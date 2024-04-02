@@ -1,5 +1,7 @@
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class MyThread implements Runnable{
 
@@ -14,6 +16,6 @@ public class MyThread implements Runnable{
 
     @Override
     public void run() {
-        storeSystem.logIn(clientSocket);
+       storeSystem.startProgram(clientSocket);
     }
 }
