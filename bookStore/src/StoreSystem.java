@@ -48,6 +48,7 @@ public class StoreSystem {
 
         //Do admin and employee's requests work?
         AdminEmployeeRequests adminEmployeeRequests=new AdminEmployeeRequests();
+        //adminEmployeeRequests.viewQuantityOfBooksInStore(clientSocket);
         //adminEmployeeRequests.selectProduct(clientSocket);
         //adminEmployeeRequests.selectReduction(clientSocket);
         //adminEmployeeRequests.selectStore(clientSocket);
@@ -75,7 +76,8 @@ public class StoreSystem {
         CustomerRequests customerRequests=new CustomerRequests();
         //customerRequests.selectProduct(clientSocket);
        // customerRequests.bookFilterBetweenTwoPrices(clientSocket);
-        customerRequests.sortBooks(clientSocket);
+       // customerRequests.sortBooks(clientSocket);
+        customerRequests.registerForm(clientSocket);
 
     }
 

@@ -128,5 +128,69 @@ public class CustomerRequests {
         }
     }
 
+/////////////////////////////////////////REGISTER FORM/////////////////////////////////
+//register form
+//works
+public void registerForm(Socket clientSocket){
+    try{
+        printToClient=new PrintStream(clientSocket.getOutputStream());
+        inputFromClient=new Scanner(clientSocket.getInputStream());
+        connection=MySQLConnection.connection();
+        String sql="INSERT INTO customer(Customer_email,customer_name,customer_phone,password) VALUES(?,?,?,?)";
+        ps=connection.prepareStatement(sql);
+        printToClient.println("Create customer....");
+        printToClient.println("Enter email of customer: ");
+        String emailCustomer=inputFromClient.nextLine();
+        printToClient.println("Enter name of customer: ");
+        String nameCustomer=inputFromClient.nextLine();
+        printToClient.println("Enter phone of customer: ");
+        String phoneCustomer=inputFromClient.nextLine();
+        printToClient.println("Enter password of customer: ");
+        String passwordCustomer=inputFromClient.nextLine();
+        //check email
+        if(checkEmail(emailCustomer)) {
+            ps.setString(1, emailCustomer);
+        }
+        ps.setString(2,nameCustomer);
+        //check phone
+        if(checkPhone(phoneCustomer)) {
+            ps.setString(3, phoneCustomer);
+        }
+        ps.setString(4,passwordCustomer);
+        ps.execute();
+        System.out.println("Create customer is successful");
+        printToClient.println("Create customer is successful");
+    }catch (IOException e){
+        System.out.println(e.getMessage());
+        printToClient.println("Error with create customer");
+    }catch (Exception e){
+        System.out.println(e.getMessage());
+        printToClient.println("Error");
+    }
+}
+
+
+/////////////////////////////////////////////check methods///////////////////////////////////
+
+    //check email
+    public boolean checkEmail(String email){
+        String regex="^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+        if(!email.matches(regex)){
+            printToClient.println("Incorrect email!");
+            return  false;
+        }
+        return true;
+    }
+
+    //check phone number
+    public boolean checkPhone(String phone){
+        String regex="[0-9]{10}";
+        if(!phone.matches(regex)){
+            printToClient.println("Incorrect phone number");
+            return false;
+        }
+        return true;
+    }
+
 
 }

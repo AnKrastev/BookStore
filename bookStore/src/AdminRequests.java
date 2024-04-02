@@ -259,9 +259,15 @@ public class AdminRequests extends AdminEmployeeRequests{
             String adminPassword=inputFromClient.next();
             printToClient.println("Enter number of magazine: ");
             int adminIdStore=inputFromClient.nextInt();
-            ps.setString(1,adminEmail);
+            //check email
+            if(checkEmail(adminEmail)) {
+                ps.setString(1, adminEmail);
+            }
             ps.setString(2,adminName);
-            ps.setString(3,adminPhone);
+            //check phone
+            if(checkPhone(adminPhone)) {
+                ps.setString(3, adminPhone);
+            }
             ps.setString(4,adminPosition);
             ps.setString(5,adminPassword);
             ps.setInt(6,adminIdStore);
@@ -301,9 +307,15 @@ public class AdminRequests extends AdminEmployeeRequests{
             String passwordEmployee=inputFromClient.nextLine();
             printToClient.println("Enter id of magazine where employee works: ");
             int idStoreEmployee=inputFromClient.nextInt();
-            ps.setString(1,emailEmployee);
+            //check email
+            if(checkEmail(emailEmployee)) {
+                ps.setString(1, emailEmployee);
+            }
             ps.setString(2,nameEmployee);
-            ps.setString(3,phoneEmployee);
+            //check phone
+            if(checkPhone(phoneEmployee)) {
+                ps.setString(3, phoneEmployee);
+            }
             //we set this condition because just admin can have position ADMIN
             //if any other worker's position is ADMIN this code will not work
             if(!positionEmployee.equals("Админ")) {
@@ -343,7 +355,9 @@ public class AdminRequests extends AdminEmployeeRequests{
             String phoneStore= inputFromClient.nextLine();
             ps.setString(1,addressStore);
             ps.setString(2,nameStore);
-            ps.setString(3,phoneStore);
+            if(checkPhone(phoneStore)) {
+                ps.setString(3, phoneStore);
+            }
             ps.execute();
             System.out.println("Create store is successful");
             printToClient.println("Create store is successful");
@@ -413,9 +427,15 @@ public class AdminRequests extends AdminEmployeeRequests{
             String phoneCustomer=inputFromClient.nextLine();
             printToClient.println("Enter password of customer: ");
             String passwordCustomer=inputFromClient.nextLine();
-            ps.setString(1,emailCustomer);
+            //check email
+            if(checkEmail(emailCustomer)) {
+                ps.setString(1, emailCustomer);
+            }
             ps.setString(2,nameCustomer);
-            ps.setString(3,phoneCustomer);
+            //check phone
+            if(checkPhone(phoneCustomer)) {
+                ps.setString(3, phoneCustomer);
+            }
             ps.setString(4,passwordCustomer);
             ps.execute();
             System.out.println("Create customer is successful");
@@ -455,9 +475,15 @@ public class AdminRequests extends AdminEmployeeRequests{
             String passwordCustomer=inputFromClient.nextLine();
             printToClient.println("Enter id of customer which will been change");
             int idCustomer=inputFromClient.nextInt();
-            ps.setString(1,emailCustomer);
+            //check email
+            if(checkEmail(emailCustomer)) {
+                ps.setString(1, emailCustomer);
+            }
             ps.setString(2,nameCustomer);
-            ps.setString(3,phoneCustomer);
+            //check phone
+            if(checkPhone(phoneCustomer)) {
+                ps.setString(3, phoneCustomer);
+            }
             ps.setString(4,passwordCustomer);
             ps.setInt(5,idCustomer);
             ps.execute();
@@ -498,9 +524,15 @@ public class AdminRequests extends AdminEmployeeRequests{
             int idStoreEmployee=inputFromClient.nextInt();
             printToClient.println("Enter id of Employee which will bi change");
             int idEmployee=inputFromClient.nextInt();
-            ps.setString(1,emailEmployee);
+            //check email
+            if(checkEmail(emailEmployee)) {
+                ps.setString(1, emailEmployee);
+            }
             ps.setString(2,nameEmployee);
-            ps.setString(3,phoneEmployee);
+            //check phone
+            if(checkPhone(phoneEmployee)) {
+                ps.setString(3, phoneEmployee);
+            }
             ps.setString(4,positionEmployee);
             ps.setString(5,passwordEmployee);
             ps.setInt(6,idStoreEmployee);
@@ -518,6 +550,28 @@ public class AdminRequests extends AdminEmployeeRequests{
     }
 
 
+
+/////////////////////////////////////////////check methods///////////////////////////////////
+
+    //check email
+    public boolean checkEmail(String email){
+        String regex="^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+        if(!email.matches(regex)){
+            printToClient.println("Incorrect email!");
+            return  false;
+        }
+        return true;
+    }
+
+    //check phone number
+    public boolean checkPhone(String phone){
+        String regex="[0-9]{10}";
+        if(!phone.matches(regex)){
+            printToClient.println("Incorrect phone number");
+            return false;
+        }
+        return true;
+    }
 
 
 

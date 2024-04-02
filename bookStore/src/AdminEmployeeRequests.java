@@ -174,6 +174,7 @@ public class AdminEmployeeRequests {
             String secondDate=inputFromClient.next();
             SimpleDateFormat simpleSecondDate=new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
             Date secondDateReduction=simpleSecondDate.parse(secondDate);
+            printToClient.println(secondDateReduction);
             //others variable
             printToClient.println("Enter new percent of reduction: ");
             int percentReduction=inputFromClient.nextInt();
@@ -238,7 +239,35 @@ public class AdminEmployeeRequests {
 
 
 
+    ///////////////////////////////////////OTHER REQUESTS///////////////////////////////////////
 
+    //view quantity of books in every store
+    //works
+    public void viewQuantityOfBooksInStore(Socket clientSocket){
+        try{
+            printToClient=new PrintStream(clientSocket.getOutputStream());
+            inputFromClient=new Scanner(clientSocket.getInputStream());
+            connection=MySQLConnection.connection();
+            String sql="SELECT store.store_name,inventory.quantity,book.book_title FROM store JOIN inventory ON store.store_id=inventory.store_store_ID JOIN book ON inventory.book_book_ID=book_ID";
+            ps=connection.prepareStatement(sql);
+            rs=ps.executeQuery();
+            while(rs.next()){
+                String titleBook=rs.getString("book_title");
+                int quantityBooks=rs.getInt("quantity");
+                String nameStore=rs.getString("store_name");
+                printToClient.println("Title: "+titleBook+" Quantity: "+quantityBooks+" store name: "+nameStore);
+            }
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error with view quantity of products");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+
+
+
+    }
 
 
 
