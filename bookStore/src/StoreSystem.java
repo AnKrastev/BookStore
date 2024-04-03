@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
 
 public class StoreSystem {
 
@@ -35,64 +36,8 @@ public class StoreSystem {
         this.userList = userList;
     }
 
-/*
-    public void logInn(Socket clientSocket){
-
-        try {
-            printToClient=new PrintStream(clientSocket.getOutputStream());
-            inputFromClient=new Scanner(clientSocket.getInputStream());
-            AdminRequests adminRequests = new AdminRequests();
-            printToClient.println("Choose option\n1-Select all from customers\n2-Delete customers");
-            int option = inputFromClient.nextInt();
-            switch (option) {
-                case 1:
-                    adminRequests.selectCustomers(clientSocket);
-                    break;
-                case 2:
-                    adminRequests.deleteReduction(clientSocket);
-                    break;
-            }
-        }catch (IOException e){
-            System.out.println(e.getMessage());
-        }
 
 
-
-        //Do admin and employee's requests work?
-        AdminEmployeeRequests adminEmployeeRequests=new AdminEmployeeRequests();
-        //adminEmployeeRequests.viewQuantityOfBooksInStore(clientSocket);
-        //adminEmployeeRequests.selectProduct(clientSocket);
-        //adminEmployeeRequests.selectReduction(clientSocket);
-        //adminEmployeeRequests.selectStore(clientSocket);
-        //adminEmployeeRequests.editProducts(clientSocket);
-
-
-        //Do admin's requests work?
-        AdminRequests adminRequests=new AdminRequests();
-       // adminRequests.selectCustomers(clientSocket);
-       // adminRequests.selectEmployee(clientSocket);
-        //adminRequests.createAdmin(clientSocket);
-       // adminRequests.createEmployee(clientSocket);
-        //adminRequests.createStore(clientSocket);
-        //adminRequests.createBook(clientSocket);
-        //adminRequests.createCustomer(clientSocket);
-        //adminRequests.editCustomer(clientSocket);
-        //adminRequests.editEmployee(clientSocket);
-        //adminRequests.deleteReduction(clientSocket);
-        //adminRequests.deleteEmoployee(clientSocket);
-        //adminRequests.deleteStore(clientSocket);
-        //adminRequests.deleteBook(clientSocket);
-        //adminRequests.deleteCustomer(clientSocket);
-
-
-        CustomerRequests customerRequests=new CustomerRequests();
-        //customerRequests.selectProduct(clientSocket);
-       // customerRequests.bookFilterBetweenTwoPrices(clientSocket);
-       // customerRequests.sortBooks(clientSocket);
-        customerRequests.registerForm(clientSocket);
-
-    }
-*/
 
 //log in method
     public boolean logIn(Socket clientSocket){
@@ -133,7 +78,7 @@ public class StoreSystem {
                             break;
                         case "Касиер":
                             Employee employee = new Employee(rsEmployeeAdmin.getString("employee.employee_email"), rsEmployeeAdmin.getString("employee.password"), rsEmployeeAdmin.getString("employee.employee_name"), rsEmployeeAdmin.getString("employee.employee_phone"), rsEmployeeAdmin.getString("employee.employee_position"));
-                            //employee menu
+                            employeeMenu(employee,clientSocket);
                             printToClient.println("Welcome employee   " + employee.getName());
                             flagCorrectUser = false;
                             break;
@@ -143,7 +88,7 @@ public class StoreSystem {
             while(rsCustomer.next()){
                 if (email.equals(rsCustomer.getString("customer.Customer_email")) && password.equals(rsCustomer.getString("customer.password"))) {
                     Customer customer = new Customer(rsCustomer.getString("customer.Customer_email"), rsCustomer.getString("customer.password"),rsCustomer.getString("customer.customer_name"),rsCustomer.getString("customer.customer_phone"));
-                    //customer menu
+                    customerMenu(customer,clientSocket);
                     printToClient.println("Welcome customer   " + customer.getName());
                     flagCorrectUser=false;
                     break;
@@ -168,12 +113,16 @@ public class StoreSystem {
 
 
 
+
+
+    /////////////////////////////////////////////////////////MAIN METHOD///////////////////////////////////////////////////
+
     //the main method of program
     public void startProgram(Socket clientSocket) {
         try {
             printToClient = new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
-            printToClient.println("Choose option: 1-LogIn\n2-Register");
+            printToClient.println("Choose option:\n 1-LogIn\n2-Register");
             int choice=inputFromClient.nextInt();
             switch (choice){
                 case 1:
@@ -362,6 +311,156 @@ public class StoreSystem {
             printToClient.println("Error");
         }
     }
+
+
+
+
+    //employee menu
+    public void employeeMenu(Employee employee,Socket clientSocket){
+        try{
+            printToClient=new PrintStream(clientSocket.getOutputStream());
+            inputFromClient=new Scanner(clientSocket.getInputStream());
+            printToClient.println("Welcome employee"+employee.getName());
+            printToClient.println("choose option:\n1-Create requests\n2-Select requests\n3-Edit requests\n4-Exit");
+            AdminEmployeeRequests adminEmployeeRequests=new AdminEmployeeRequests();
+            int choiceTypeRequests=inputFromClient.nextInt();
+            switch (choiceTypeRequests){
+                case 1:
+                    adminEmployeeRequests.createReduction(clientSocket);
+                    employeeMenu(employee,clientSocket);
+                    break;
+                case 2:
+                    printToClient.println("Choose select requests:\n1-Select product\n2-Select reduction\n3-Select store\n4-viewQuantityOfBooksInStore");
+                    int choiceSelectRequests=inputFromClient.nextInt();
+                    switch (choiceSelectRequests){
+                        case 1:
+                            adminEmployeeRequests.selectProduct(clientSocket);
+                            employeeMenu(employee,clientSocket);
+                            break;
+                        case 2:
+                            adminEmployeeRequests.selectReduction(clientSocket);
+                            employeeMenu(employee,clientSocket);
+                            break;
+                        case 3:
+                            adminEmployeeRequests.selectStore(clientSocket);
+                            employeeMenu(employee,clientSocket);
+                            break;
+                        case 4:
+                            adminEmployeeRequests.viewQuantityOfBooksInStore(clientSocket);
+                            employeeMenu(employee,clientSocket);
+                            break;
+                        default:
+                            printToClient.println("Incorrect choice");
+                            printToClient.println("Try again");
+                            employeeMenu(employee,clientSocket);
+                    }
+                    break;
+                case 3:
+                    printToClient.println("Choose edit requests:\n1-editProducts\n2-edit reduction");
+                    int choiceEditRequest=inputFromClient.nextInt();
+                    switch (choiceEditRequest){
+                        case 1:
+                            adminEmployeeRequests.editProducts(clientSocket);
+                            employeeMenu(employee,clientSocket);
+                            break;
+                        case 2:
+                            adminEmployeeRequests.editReduction(clientSocket);
+                            employeeMenu(employee,clientSocket);
+                            break;
+                        default:
+                            printToClient.println("Incorrect choice");
+                            printToClient.println("Try again");
+                            employeeMenu(employee,clientSocket);
+                    }
+                    break;
+                case 4:
+                        printToClient.close();
+                        inputFromClient.close();
+                        clientSocket.close();
+                        break;
+                default:
+                    printToClient.println("Incorrect choice");
+                    printToClient.println("Try again");
+                    employeeMenu(employee,clientSocket);
+            }
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error with employeeMenu");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+    }
+
+
+
+
+
+
+
+
+    //customer menu
+    public void customerMenu(Customer customer,Socket clientSocket){
+        try{
+            printToClient=new PrintStream(clientSocket.getOutputStream());
+            inputFromClient=new Scanner(clientSocket.getInputStream());
+            printToClient.println("Choose:\n1-View products in store\n2-Shopping\n3-Exit");
+            int choiceOption=inputFromClient.nextInt();
+            CustomerRequests customerRequests=new CustomerRequests();
+            switch (choiceOption){
+                case 1:
+                    printToClient.println("Choose:\n1-Select all products from magazine without filters\n2-Select all products between two price\n3-select the products by price in ascending order");
+                    int choiceSelect=inputFromClient.nextInt();
+                    switch (choiceSelect){
+                        case 1:
+                            customerRequests.selectProduct(clientSocket);
+                            customerMenu(customer,clientSocket);
+                            break;
+                        case 2:
+                            customerRequests.bookFilterBetweenTwoPrices(clientSocket);
+                            customerMenu(customer,clientSocket);
+                            break;
+                        case 3:
+                            customerRequests.sortBooks(clientSocket);
+                            customerMenu(customer,clientSocket);
+                            break;
+                        default:
+                            printToClient.println("Incorrect choice");
+                            printToClient.println("Try again");
+                            customerMenu(customer,clientSocket);
+                    }
+                    break;
+                case 2:
+                    printToClient.println("Shopping start");
+                    break;
+                case 3:
+                    printToClient.close();
+                    inputFromClient.close();
+                    clientSocket.close();
+                default:
+                    printToClient.println("Incorrect choice");
+                    printToClient.println("Try again");
+                    customerMenu(customer,clientSocket);
+            }
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+    }
+
+
+
+
+
+//questions:
+    //1-Как да направя така че при натискане на изход да прекъсна връзка със сървъра
+    //2-Как да направя така 1е клиента да пазарува и да добавя неюа в кошницата
+    //3-как да оправя проблема със датите в заявките
+
+
+
+
+
 
 
 
