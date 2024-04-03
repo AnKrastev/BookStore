@@ -203,7 +203,7 @@ public class AdminEmployeeRequests {
 
  ////////////////////////////////////////////////////ADD REDUCTION//////////////////////////////////////////////////////
 //doesn't work
-    public void addReduction(Socket clientSocket){
+    public void createReduction(Socket clientSocket){
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());

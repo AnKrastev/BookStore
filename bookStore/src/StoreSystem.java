@@ -127,8 +127,7 @@ public class StoreSystem {
                     switch (rsEmployeeAdmin.getString("employee_position")) {
                         case "Админ":
                             Admin admin = new Admin(rsEmployeeAdmin.getString("employee.employee_email"), rsEmployeeAdmin.getString("employee.password"), rsEmployeeAdmin.getString("employee.employee_name"), rsEmployeeAdmin.getString("employee.employee_phone"));
-                            //admin menu
-                            //след това в менютата ще кажем на първия ред следното: Welcome + admin.getName(); за да има смисъл от обектите същото и за останалите потребители
+                            adminMenu(admin,clientSocket);
                             printToClient.println("Welcome admin   " + admin.getName());
                             flagCorrectUser = false;
                             break;
@@ -202,6 +201,168 @@ public class StoreSystem {
             printToClient.println("Error with store");
         }
     }
+
+
+
+    ///////////////////////////////////////////////////////user's manu//////////////////////////////////////////
+
+    //admin menu
+    public void adminMenu(Admin admin,Socket clientSocket){
+        try{
+            printToClient=new PrintStream(clientSocket.getOutputStream());
+            inputFromClient=new Scanner(clientSocket.getInputStream());
+            printToClient.println("Welcome admin"+admin.getName());
+            //choose from four type requests
+            printToClient.println("Choose option:\n 1-Create Requests\n 2-Select Requests\n 3-Edit Requests\n 4-Delete Requests\n5-Exit");
+            int chooseTypeRequest=inputFromClient.nextInt();
+            AdminRequests adminRequests=new AdminRequests();
+            //match the choice with all opportunities and chooses from all requests from match type
+            //after every requests the user returns to admin menu
+            switch (chooseTypeRequest){
+                case 1:
+                    printToClient.println("Choose option:\n1-Create reduction\n2-Create admin\n3-Create employee\n4-Create store\n5-Create book\n6-Create customer");
+                    int choiceCreateRequest=inputFromClient.nextInt();
+                    switch (choiceCreateRequest){
+                        case 1:
+                            adminRequests.createReduction(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        case 2:
+                            adminRequests.createAdmin(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        case 3:
+                            adminRequests.createEmployee(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        case 4:
+                            adminRequests.createStore(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        case 5:
+                            adminRequests.createBook(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        case 6:
+                            adminRequests.createCustomer(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        default:
+                            printToClient.println("Incorrect option");
+                            printToClient.println("Try again");
+                            adminMenu(admin,clientSocket);
+                    }
+                    break;
+                case 2:
+                    printToClient.println("Choose option:\n1-Select all products\n2-Select all reductions\n3-Select all stores\n4-Select all customers\n5-Select all employees\n6-viewQuantityOfBooksInStore");
+                    int choiceSelectRequests=inputFromClient.nextInt();
+                    switch (choiceSelectRequests){
+                        case 1:
+                            adminRequests.selectProduct(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        case 2:
+                            adminRequests.selectReduction(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        case 3:
+                            adminRequests.selectStore(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        case 4:
+                            adminRequests.selectCustomers(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        case 5:
+                            adminRequests.selectEmployee(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        case 6:
+                            adminRequests.viewQuantityOfBooksInStore(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        default:
+                            printToClient.println("Incorrect option");
+                            printToClient.println("Try again");
+                            adminMenu(admin,clientSocket);
+                    }
+                    break;
+                case 3:
+                    printToClient.println("Choose option:\n1-Edit products\n2-Edit reduction\n3-Edit customers\n4-Edit employees");
+                    int choiceEditRequests=inputFromClient.nextInt();
+                    switch (choiceEditRequests){
+                        case 1:
+                            adminRequests.editProducts(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        case 2:
+                            adminRequests.editReduction(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        case 3:
+                            adminRequests.editCustomer(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        case 4:
+                            adminRequests.editEmployee(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        default:
+                            printToClient.println("Incorrect option");
+                            printToClient.println("Try again");
+                            adminMenu(admin,clientSocket);
+                    }
+                    break;
+                case 4:
+                    printToClient.println("Choose option:\n1-Delete reduction\n2-Delete employee\n3-Delete store\n4-Delete book\n5-Delete customer");
+                    int choiceDeleteRequest=inputFromClient.nextInt();
+                    switch (choiceDeleteRequest){
+                        case 1:
+                            adminRequests.deleteReduction(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        case 2:
+                            adminRequests.deleteEmoployee(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        case 3:
+                            adminRequests.deleteStore(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        case 4:
+                            adminRequests.deleteBook(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        case 5:
+                            adminRequests.deleteCustomer(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        default:
+                            printToClient.println("Incorrect option");
+                            printToClient.println("Try again");
+                            adminMenu(admin,clientSocket);
+                    }
+                    break;
+                case 5:
+                    //End the connection with server
+                    printToClient.close();
+                    inputFromClient.close();
+                    clientSocket.close();
+                    break;
+                default:
+                    printToClient.println("Incorrect option");
+                    printToClient.println("Try again...");
+                    adminMenu(admin,clientSocket);
+            }
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error with admin menu");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+    }
+
 
 
 
