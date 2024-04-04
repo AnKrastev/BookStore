@@ -14,6 +14,7 @@ public class StoreSystem {
 
   private ArrayList<User> userList;
   private Scanner inputFromClient;
+  private Scanner input=new Scanner(System.in);
   private PrintStream printToClient;
   private Connection connection=null;
   //results for employee and admin from database
@@ -294,10 +295,8 @@ public class StoreSystem {
                     break;
                 case 5:
                     //End the connection with server
-                    printToClient.println("Disconnected server");
-                    printToClient.close();
-                    inputFromClient.close();
-                    clientSocket.close();
+                    //the client should enter exit and after that connection with the server will be break
+                    printToClient.println("Enter 'exit'");
                     break;
                 default:
                     printToClient.println("Incorrect option");
@@ -375,9 +374,7 @@ public class StoreSystem {
                     }
                     break;
                 case 4:
-                        printToClient.close();
-                        inputFromClient.close();
-                        clientSocket.close();
+                        printToClient.println("Enter 'exit'");
                         break;
                 default:
                     printToClient.println("Incorrect choice");
@@ -435,9 +432,7 @@ public class StoreSystem {
                     printToClient.println("Shopping start");
                     break;
                 case 3:
-                    printToClient.close();
-                    inputFromClient.close();
-                    clientSocket.close();
+                    printToClient.println("Enter 'exit'");
                 default:
                     printToClient.println("Incorrect choice");
                     printToClient.println("Try again");
