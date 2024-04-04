@@ -294,6 +294,7 @@ public class StoreSystem {
                     break;
                 case 5:
                     //End the connection with server
+                    printToClient.println("Disconnected server");
                     printToClient.close();
                     inputFromClient.close();
                     clientSocket.close();
@@ -456,6 +457,8 @@ public class StoreSystem {
     //1-Как да направя така че при натискане на изход да прекъсна връзка със сървъра
     //2-Как да направя така 1е клиента да пазарува и да добавя неюа в кошницата
     //3-как да оправя проблема със датите в заявките
+    //da ne se vizda parolata
+    //hash map
 
 
 
