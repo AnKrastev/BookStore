@@ -91,6 +91,8 @@ public class CustomerRequests {
     }
 
 
+
+
     /////////////////////////////////////////////FILTERS TO DATABASE//////////////////////////////////////////////////////
 
 
@@ -205,6 +207,10 @@ public boolean registerForm(Socket clientSocket){
     return false;
 }
 
+
+////////////////////////////////////////////////////////////////ORDER REQUEST///////////////////////////////////////////////
+    //////////////////////////////////////////////EVERYTHINK FOR ORDER///////////////////////////////////////////
+//doesnt work
 //create order
 public void createOrder(Socket clientSocket, int idCustomer, Date orderDate, int idStore, double totalAmount){
         try{
@@ -227,6 +233,75 @@ public void createOrder(Socket clientSocket, int idCustomer, Date orderDate, int
             printToClient.println("Error");
         }
 }
+
+//??????????????????????????????????????????????????/
+//create order detail
+    public void createOrderDetail(Socket clientSocket,int quantity,int orderId,int book_id,double unitPrice){
+        try{
+            printToClient=new PrintStream(clientSocket.getOutputStream());
+            inputFromClient=new Scanner(clientSocket.getInputStream());
+            connection=MySQLConnection.connection();
+            String sql="INSERT INTO orderdetails(book_book_ID,order_order_ID,quantity,unit_price) VALUES(?,?,?,?)";
+            ps=connection.prepareStatement(sql);
+            ps.setInt(1,book_id);
+            ps.setInt(2,orderId);
+            ps.setInt(3,quantity);
+            ps.setDouble(4,unitPrice);
+            ps.execute();
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error with orderDetails");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+    }
+
+
+
+    //select for order
+    //return idOrder
+    public int selectOrderId(Date orderDate,int customerID){
+        try{
+            connection=MySQLConnection.connection();
+            String sql="SELECT order_ID FROM order WHERE order_date=? and customer_customer_ID=?";
+            ps=connection.prepareStatement(sql);
+            ps.setDate(1,orderDate);
+            ps.setInt(2,customerID);
+            ps.execute();
+            rs=ps.executeQuery();
+            while(rs.next()){
+                int idOrder=rs.getInt("order_ID");
+                return idOrder;
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+        return 0;
+    }
+
+
+    //select for order
+    //return bookPrice
+    public double selectPriceBook(int idBook){
+        try{
+            connection=MySQLConnection.connection();
+            String sql="SELECT book_price FROM book WHERE id=?";
+            ps=connection.prepareStatement(sql);
+            ps.setInt(1,idBook);
+            rs=ps.executeQuery();
+            while(rs.next()){
+                double bookPrice=rs.getDouble("book_price");
+                return bookPrice;
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+        return 0;
+    }
+
 /////////////////////////////////////////////check methods///////////////////////////////////
 
     //check email

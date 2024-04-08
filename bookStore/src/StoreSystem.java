@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.ref.Cleaner;
 import java.net.Socket;
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -441,6 +442,7 @@ public class StoreSystem {
                             break;
                         case 3:
                             orderCustomer(customer,clientSocket);
+                            orderDetails(customer,clientSocket);
                             break;
                     }
                     break;
@@ -460,7 +462,7 @@ public class StoreSystem {
         }
     }
 
-
+//////////////////////////////////////////////////////////////SHOPING CART AND ORDER////////////////////////////////////////////////////////
 
     //add product in user's shopping cart
     public void addToShoppingCard(Customer customer,Socket clientSocket){
@@ -520,15 +522,36 @@ public void seeShoppingCard(Customer customer,Socket clientSocket){
         //create order in database
         printToClient.println("Enter magazine from which you are shopping");
         int idStore=inputFromClient.nextInt();
-        customerRequests.createOrder(clientSocket,rsEmployeeAdmin.getInt("employee_ID"), Date.valueOf(date.format(now)),idStore, customerRequests.getTotalAmount());
+        customerRequests.createOrder(clientSocket,rsCustomer.getInt("customer_ID"), Date.valueOf(date.format(now)),idStore, customerRequests.getTotalAmount());
 //after end order user back to the customerMenu
         customerMenu(customer,clientSocket);
     }
 
 
 
-
-
+//orderDetails
+public void orderDetails(Customer customer,Socket clientSocket) throws SQLException {
+        //create object from CustomerRequests
+    CustomerRequests customerRequests=new CustomerRequests();
+    //we get today's date
+    DateTimeFormatter date = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    LocalDateTime now = LocalDateTime.now();
+    //set today's date
+        int orderId= customerRequests.selectOrderId(Date.valueOf(date.format(now)), rsCustomer.getInt("customer_ID"));
+        //get book price
+    HashMap<Integer,Integer> shopingCart=customer.getShoppingCart();
+    if(shopingCart.isEmpty()){
+        printToClient.println("You don't have anythink articuls in shoppingCart");
+    }else {
+        //we loop through it and output the title of the book and its price for the given request in shoppingCart(HashMap)
+        for (Integer id : shopingCart.keySet()) {
+            //get unit price for all books
+            double bookPrice=customerRequests.selectPriceBook(id.intValue());
+            //saved date in order details for all book from this order
+            customerRequests.createOrderDetail(clientSocket,shopingCart.get(id),orderId,id.intValue(),bookPrice);
+        }
+    }
+}
 
 
 
