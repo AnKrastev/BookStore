@@ -578,6 +578,7 @@ public void orderDetails(Customer customer,Socket clientSocket) throws SQLExcept
 //questions:
     //3-как да оправя проблема със датите в заявките
     //da dobawq namalenieto kym produktite
+    //da dobavq zaqwka za namalqne na broikite v magazinite
 
 //намаленията ще се показват когато изведем процентите на съответната дата и я извадим от крайаната цена на продукта в самата заявка(тоест сваляме цената на продукта докатп го селектираме по съответната дат
 
