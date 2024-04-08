@@ -1,10 +1,9 @@
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -431,7 +430,7 @@ public class StoreSystem {
                     break;
                 case 2:
                     printToClient.println("Shopping start");
-                    printToClient.println("Enter options\n1-Go shopping\n2-View your shoppingCart");
+                    printToClient.println("Enter options\n1-Go shopping\n2-View your shoppingCart\n3-Order");
                     int option=inputFromClient.nextInt();
                     switch (option){
                         case 1:
@@ -439,6 +438,9 @@ public class StoreSystem {
                             break;
                         case 2:
                             seeShoppingCard(customer,clientSocket);
+                            break;
+                        case 3:
+                            orderCustomer(customer,clientSocket);
                             break;
                     }
                     break;
@@ -453,6 +455,8 @@ public class StoreSystem {
         }catch (IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -491,7 +495,7 @@ public void seeShoppingCard(Customer customer,Socket clientSocket){
         }else {
             //we loop through it and output the title of the book and its price for the given request in shoppingCart(HashMap)
             for (Integer id : shopingCart.keySet()) {
-                customerRequests.selectProductFromShoppingCart(clientSocket, id.intValue());
+                customerRequests.selectProductFromShoppingCart(clientSocket, id.intValue(),shopingCart.get(id).intValue());
                 //we output null line like enter after every result
                 printToClient.println("");
             }
@@ -502,28 +506,58 @@ public void seeShoppingCard(Customer customer,Socket clientSocket){
 
 }
 
+
+
+//order and save data for order in database
+    public void orderCustomer(Customer customer,Socket clientSocket) throws SQLException {
+        //get the user shoppingCart
+        HashMap<Integer,Integer> shopingCart=customer.getShoppingCart();
+        //create object customerRequest for our requests
+        CustomerRequests customerRequests=new CustomerRequests();
+        //get today's date
+        DateTimeFormatter date = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime now = LocalDateTime.now();
+        //create order in database
+        printToClient.println("Enter magazine from which you are shopping");
+        int idStore=inputFromClient.nextInt();
+        customerRequests.createOrder(clientSocket,rsEmployeeAdmin.getInt("employee_ID"), Date.valueOf(date.format(now)),idStore, customerRequests.getTotalAmount());
+//after end order user back to the customerMenu
+        customerMenu(customer,clientSocket);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //completed
     ///1-Как да направя така че при натискане на изход да прекъсна връзка със сървъра- направено
 
     //2-da ne se vizda parolata-- това е невъзможно, защото за JVM , когато става въпрос за конзолно приложение , тъй като не се свързва директно с конзолата и съответно дава грешка че не съществува конзола
     //ако е за JOPTION pane ще стане
 
+//3-Как да направя така 1е клиента да пазарува и да добавя неюа в кошницата
+
 
 
 
 //questions:
-    //2-Как да направя така 1е клиента да пазарува и да добавя неюа в кошницата
     //3-как да оправя проблема със датите в заявките
+    //da dobawq namalenieto kym produktite
 
+//намаленията ще се показват когато изведем процентите на съответната дата и я извадим от крайаната цена на продукта в самата заявка(тоест сваляме цената на продукта докатп го селектираме по съответната дат
 
-
-    //hash map
-//tuk sum
-
-//
-//
-
-//
 
 
 

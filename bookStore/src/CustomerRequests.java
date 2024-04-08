@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Scanner;
@@ -19,7 +20,16 @@ public class CustomerRequests {
     //input information from client
     Scanner inputFromClient=null;
 
+//CREATE VARIABLE TOTALAMOUNT
+    private double totalAmount=0;
 
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
 
     //////////////////////////////////////////SELECT REQUESTS////////////////////////////////////////////////////////
 
@@ -55,17 +65,20 @@ public class CustomerRequests {
 
 
 
-    public void selectProductFromShoppingCart(Socket clientSocket,int idBook){
+    public void selectProductFromShoppingCart(Socket clientSocket,int idBook,int quality){
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
-            ps=connection.prepareStatement("SELECT book.book_title,book.book_price FROM book WHERE book_ID=?");
+            String sql="SELECT book.book_title,book.book_price FROM book WHERE book_ID=?";
+            ps=connection.prepareStatement(sql);
             ps.setInt(1,idBook);
             rs=ps.executeQuery();
             while(rs.next()){
                 String titleBook=rs.getString("book_title");
                 double price=rs.getDouble("book_price");
+                //added this price multiplq quality to totalAmount
+                totalAmount=price*quality;
                 printToClient.print(titleBook+" "+price);
             }
         }catch (IOException e){
@@ -192,7 +205,28 @@ public boolean registerForm(Socket clientSocket){
     return false;
 }
 
-
+//create order
+public void createOrder(Socket clientSocket, int idCustomer, Date orderDate, int idStore, double totalAmount){
+        try{
+            printToClient=new PrintStream(clientSocket.getOutputStream());
+            inputFromClient=new Scanner(clientSocket.getInputStream());
+            connection=MySQLConnection.connection();
+            String sql="INSERT INTO order(customer_customer_ID,order_date,store_store_ID,total_amount) VALUES(?,?,?,?)";
+            ps=connection.prepareStatement(sql);
+            ps.setInt(1,idCustomer);
+            ps.setDate(2,orderDate);
+            ps.setInt(3,idStore);
+            ps.setDouble(4,totalAmount);
+            ps.execute();
+            printToClient.println("Order is successful");
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error with order");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+}
 /////////////////////////////////////////////check methods///////////////////////////////////
 
     //check email
