@@ -55,6 +55,27 @@ public class CustomerRequests {
 
 
 
+    public void selectProductFromShoppingCart(Socket clientSocket,int idBook){
+        try{
+            printToClient=new PrintStream(clientSocket.getOutputStream());
+            inputFromClient=new Scanner(clientSocket.getInputStream());
+            connection=MySQLConnection.connection();
+            ps=connection.prepareStatement("SELECT book.book_title,,book.book_price FROM book WHERE book_ID=?");
+            rs=ps.executeQuery();
+            ps.setInt(1,idBook);
+            while(rs.next()){
+                String titleBook=rs.getString("book_title");
+                double price=rs.getDouble("book_price");
+                printToClient.print(titleBook+" "+price);
+            }
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error with shoppingCart");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+    }
 
 
     /////////////////////////////////////////////FILTERS TO DATABASE//////////////////////////////////////////////////////

@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
@@ -90,7 +91,6 @@ public class StoreSystem {
                 if (email.equals(rsCustomer.getString("customer.Customer_email")) && password.equals(rsCustomer.getString("customer.password"))) {
                     Customer customer = new Customer(rsCustomer.getString("customer.Customer_email"), rsCustomer.getString("customer.password"),rsCustomer.getString("customer.customer_name"),rsCustomer.getString("customer.customer_phone"));
                     customerMenu(customer,clientSocket);
-                    printToClient.println("Welcome customer   " + customer.getName());
                     flagCorrectUser=false;
                     break;
                 }
@@ -399,6 +399,7 @@ public class StoreSystem {
 
     //customer menu
     public void customerMenu(Customer customer,Socket clientSocket){
+        printToClient.println(customer.getName());
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
@@ -430,9 +431,19 @@ public class StoreSystem {
                     break;
                 case 2:
                     printToClient.println("Shopping start");
+                    printToClient.println("Enter options\n1-Go shopping\n2-View your shoppingCart");
+                    int option=inputFromClient.nextInt();
+                    switch (option){
+                        case 1:
+                            break;
+                        case 2:
+                            seeShoppingCard(customer,clientSocket);
+                            break;
+                    }
                     break;
                 case 3:
                     printToClient.println("Enter 'exit'");
+                    break;
                 default:
                     printToClient.println("Incorrect choice");
                     printToClient.println("Try again");
@@ -446,13 +457,56 @@ public class StoreSystem {
 
 
 
+    //add product in user's shopping cart
+    public void addToShoppingCard(Customer customer,Socket clientSocket){
+        //create object CustomerRequests
+        CustomerRequests customerRequests=new CustomerRequests();
+        customerRequests.selectProduct(clientSocket);
+        printToClient.println("Enter id of product which you want");
+        int idProduct = inputFromClient.nextInt();
+        printToClient.println("Enter quality of product");
+        int quality = inputFromClient.nextInt();
+        //shoppingCard.put(idProduct, quality);
+    }
+
+
+    //create method for vision all product in user's shoppingCart
+public void seeShoppingCard(Customer customer,Socket clientSocket){
+        //get the user shoppingCart
+        HashMap<Integer,Integer> shopingCart=customer.getShoppingCart();
+        //create object customerRequest for our requests
+        CustomerRequests customerRequests=new CustomerRequests();
+        if(shopingCart.isEmpty()){
+            printToClient.println("You don't have anythink articuls in shoppingCart");
+        }else {
+            //we loop through it and output the title of the book and its price for the given request in shoppingCart(HashMap)
+            for (int id : shopingCart.keySet()) {
+                customerRequests.selectProductFromShoppingCart(clientSocket, id);
+                //we output null line like enter after every result
+                printToClient.println("");
+            }
+        }
+        //after we see the products or no we always return to customer menu
+    customerMenu(customer,clientSocket);
+
+
+}
+
+//completed
+    //1-Как да направя така че при натискане на изход да прекъсна връзка със сървъра- направено
+
+    //2-da ne se vizda parolata-- това е невъзможно, защото за JVM , когато става въпрос за конзолно приложение , тъй като не се свързва директно с конзолата и съответно дава грешка че не съществува конзола
+    //ако е за JOPTION pane ще стане
+
+
 
 
 //questions:
-    //1-Как да направя така че при натискане на изход да прекъсна връзка със сървъра
     //2-Как да направя така 1е клиента да пазарува и да добавя неюа в кошницата
     //3-как да оправя проблема със датите в заявките
-    //da ne se vizda parolata
+
+
+
     //hash map
 //tuk sum
 
