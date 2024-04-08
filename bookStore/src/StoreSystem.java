@@ -435,6 +435,7 @@ public class StoreSystem {
                     int option=inputFromClient.nextInt();
                     switch (option){
                         case 1:
+                            addToShoppingCard(customer,clientSocket);
                             break;
                         case 2:
                             seeShoppingCard(customer,clientSocket);
@@ -460,13 +461,22 @@ public class StoreSystem {
     //add product in user's shopping cart
     public void addToShoppingCard(Customer customer,Socket clientSocket){
         //create object CustomerRequests
+        HashMap<Integer,Integer> shoppingCart=customer.getShoppingCart();
         CustomerRequests customerRequests=new CustomerRequests();
         customerRequests.selectProduct(clientSocket);
-        printToClient.println("Enter id of product which you want");
-        int idProduct = inputFromClient.nextInt();
-        printToClient.println("Enter quality of product");
-        int quality = inputFromClient.nextInt();
-        //shoppingCard.put(idProduct, quality);
+        //create the variables
+        int idProduct;
+        int quality;
+        printToClient.println("The shopping will end when you enter zero");
+        do{
+            printToClient.println("Enter id of product which you want");
+            idProduct = inputFromClient.nextInt();
+            printToClient.println("Enter quality of product");
+            quality = inputFromClient.nextInt();
+            shoppingCart.put(idProduct,quality);
+        }while(idProduct!=0 && quality!=0);
+        //when we end with added articuls to shoppingCart we will return to customerMenu
+        customerMenu(customer,clientSocket);
     }
 
 
@@ -480,8 +490,8 @@ public void seeShoppingCard(Customer customer,Socket clientSocket){
             printToClient.println("You don't have anythink articuls in shoppingCart");
         }else {
             //we loop through it and output the title of the book and its price for the given request in shoppingCart(HashMap)
-            for (int id : shopingCart.keySet()) {
-                customerRequests.selectProductFromShoppingCart(clientSocket, id);
+            for (Integer id : shopingCart.keySet()) {
+                customerRequests.selectProductFromShoppingCart(clientSocket, id.intValue());
                 //we output null line like enter after every result
                 printToClient.println("");
             }

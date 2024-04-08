@@ -60,9 +60,9 @@ public class CustomerRequests {
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
-            ps=connection.prepareStatement("SELECT book.book_title,,book.book_price FROM book WHERE book_ID=?");
-            rs=ps.executeQuery();
+            ps=connection.prepareStatement("SELECT book.book_title,book.book_price FROM book WHERE book_ID=?");
             ps.setInt(1,idBook);
+            rs=ps.executeQuery();
             while(rs.next()){
                 String titleBook=rs.getString("book_title");
                 double price=rs.getDouble("book_price");
