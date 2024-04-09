@@ -582,11 +582,17 @@ public void orderDetails(Customer customer,Socket clientSocket) throws SQLExcept
 
     //5-da dobavq zaqwka za namalqne na broikite v magazinite
 
-//questions:
+
+
+
+//things which i should to do:
     //3-как да оправя проблема със датите в заявките
     //da naprawq taka che customera da izbira magazina ot kojto da pazaruva v samoto nachalo
-//имам проблем с извеждането на книгите(извеждат ми се само една или две книги, защото явно ми дава грешка с намалението (ако го коментирам се извеждат всичките)) най-вероятно е заради датите в заявките
     
+
+  //  errors:
+//имам проблем с извеждането на книгите(извеждат ми се само една или две книги, защото явно ми дава грешка с намалението (ако го коментирам се извеждат всичките)) най-вероятно е заради датите в заявките
+
 
 
 
