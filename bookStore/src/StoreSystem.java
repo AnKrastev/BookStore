@@ -26,6 +26,7 @@ public class StoreSystem {
   private ResultSet rsCustomer=null;
 
 
+
     public StoreSystem() {
         this.userList = new ArrayList<>();
     }
@@ -520,7 +521,7 @@ public void seeShoppingCard(Customer customer,Socket clientSocket){
         DateTimeFormatter date = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
         //create order in database
-        printToClient.println("Enter magazine from which you are shopping");
+        printToClient.println("ENter id Store from where this book is");
         int idStore=inputFromClient.nextInt();
         customerRequests.createOrder(clientSocket,rsCustomer.getInt("customer_ID"), Date.valueOf(date.format(now)),idStore, customerRequests.getTotalAmount());
 //after end order user back to the customerMenu
@@ -550,7 +551,7 @@ public void orderDetails(Customer customer,Socket clientSocket) throws SQLExcept
             //saved date in order details for all book from this order
             customerRequests.createOrderDetail(clientSocket,shopingCart.get(id),orderId,id.intValue(),bookPrice);
             //reduction store quantity dor every book
-            printToClient.println("Enter store id from where this product is: ");
+            printToClient.println("ENter id Store from where this book is");
             int idStore=inputFromClient.nextInt();
             customerRequests.qualityBooksInStore(clientSocket,id.intValue(),idStore,shopingCart.get(id).intValue());
         }
@@ -583,7 +584,9 @@ public void orderDetails(Customer customer,Socket clientSocket) throws SQLExcept
 
 //questions:
     //3-как да оправя проблема със датите в заявките
-
+    //da naprawq taka che customera da izbira magazina ot kojto da pazaruva v samoto nachalo
+//имам проблем с извеждането на книгите(извеждат ми се само една или две книги, защото явно ми дава грешка с намалението (ако го коментирам се извеждат всичките)) най-вероятно е заради датите в заявките
+    
 
 
 

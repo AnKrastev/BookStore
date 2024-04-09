@@ -103,6 +103,33 @@ public class CustomerRequests {
     }
 
 
+    //SELECT STORE
+    //works
+    public void selectStore(Socket clientSocket){
+        try{
+            printToClient=new PrintStream(clientSocket.getOutputStream());
+            connection=MySQLConnection.connection();
+            String sql="SELECT * FROM store";
+            ps=connection.prepareStatement(sql);
+            rs=ps.executeQuery();
+            printToClient.println("All stores: ");
+            while(rs.next()){
+                int idStore=rs.getInt("store_ID");
+                String addressStore=rs.getString("store_address");
+                String nameStore=rs.getString("store_name");
+                String phoneStore=rs.getString("store_phone");
+                printToClient.println(idStore+" "+addressStore+" "+nameStore+" "+phoneStore);
+            }
+            System.out.println("Select of stores is successful");
+        }catch(IOException e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error with select store");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+    }
+
 //select reduction
     public int reduction(Socket clientSocket){
         try{
