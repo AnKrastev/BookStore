@@ -5,7 +5,10 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
 
 public class CustomerRequests {
 
@@ -50,6 +53,11 @@ public class CustomerRequests {
                 double bookPrice=rs.getDouble("book_price");
                 String bookPublisher=rs.getString("book_publisher");
                 String bookTitle=rs.getString("book_title");
+                //set new book price if we have reduction
+                int reduction=reduction(clientSocket);
+                if(reduction!=0){
+                    bookPrice=bookPrice-bookPrice*(reduction/100);
+                }
                 printToClient.println(bookID+" "+bookAuthor+" "+bookPrice+" "+bookPublisher+" "+bookTitle);
             }
             System.out.println("Select products is successful");
@@ -78,6 +86,10 @@ public class CustomerRequests {
                 String titleBook=rs.getString("book_title");
                 double price=rs.getDouble("book_price");
                 //added this price multiplq quality to totalAmount
+                int reduction=reduction(clientSocket);
+                if(reduction!=0){
+                   price=price-price*(reduction/100);
+                }
                 totalAmount=price*quality;
                 printToClient.print(titleBook+" "+price);
             }
@@ -91,7 +103,35 @@ public class CustomerRequests {
     }
 
 
-
+//select reduction
+    public int reduction(Socket clientSocket){
+        try{
+            printToClient=new PrintStream(clientSocket.getOutputStream());
+            inputFromClient=new Scanner(clientSocket.getInputStream());
+            connection=MySQLConnection.connection();
+            //get today's date
+            DateTimeFormatter date = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDateTime now = LocalDateTime.now();
+            //check today's date with start date and end date from every reduction and if have match get percent of reduction
+            String sql="SELECT percentReduction FROM reduction WHERE ? BETWEEN startDate AND endDate";
+            ps=connection.prepareStatement(sql);
+            ps.setDate(1,Date.valueOf(date.format(now)));
+            rs= ps.executeQuery();
+            while(rs.next()){
+                int percentReduction=rs.getInt("percentReduction");
+                //return percent reduction
+                return percentReduction;
+            }
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error with reduction");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+        //return 0 if it doesn't have reduction
+        return 0;
+    }
 
     /////////////////////////////////////////////FILTERS TO DATABASE//////////////////////////////////////////////////////
 
@@ -117,9 +157,13 @@ public class CustomerRequests {
             while(rs.next()){
                 int bookId=rs.getInt("book_ID");
                 String bookAuthor=rs.getString("book_author");
-                String bookPrice=rs.getString("book_price");
+                double bookPrice=rs.getDouble("book_price");
                 String bookPublisher=rs.getString("book_publisher");
                 String bookTitle=rs.getString("book_title");
+                int reduction=reduction(clientSocket);
+                if(reduction!=0){
+                    bookPrice=bookPrice-bookPrice*(reduction/100);
+                }
                 printToClient.println(bookId+" "+bookAuthor+" "+bookPrice+" "+bookPublisher+" "+bookTitle);
             }
             System.out.println("Filtering of product is successful");
@@ -149,9 +193,13 @@ public class CustomerRequests {
             while(rs.next()){
                 int bookId=rs.getInt("book_ID");
                 String bookAuthor=rs.getString("book_author");
-                String bookPrice=rs.getString("book_price");
+                double bookPrice=rs.getDouble("book_price");
                 String bookPublisher=rs.getString("book_publisher");
                 String bookTitle=rs.getString("book_title");
+                int reduction=reduction(clientSocket);
+                if(reduction!=0){
+                    bookPrice=bookPrice-bookPrice*(reduction/100);
+                }
                 printToClient.println(bookId+" "+bookAuthor+" "+bookPrice+" "+bookPublisher+" "+bookTitle);
             }
             System.out.println("Select book is successful");
