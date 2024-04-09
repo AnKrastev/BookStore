@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
@@ -153,7 +154,7 @@ synchronized public void editProducts(Socket clientSocket){
 
 
     //edit reduction
-    //doesn't work
+    //works
     synchronized public void editReduction(Socket clientSocket){
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
@@ -163,27 +164,19 @@ synchronized public void editProducts(Socket clientSocket){
             ps=connection.prepareStatement(sql);
             printToClient.println("Edit reduction: ");
             //set staff to variables
-            //set Date
+            //set Date AS STRING BECAUSE DATETIME IN MYSQL IS STRING ALSO
             printToClient.println("Enter startDate of reduction: ");
-            String firstDate=inputFromClient.next();
-            //Instantiating the SimpleDateFormat class
-            SimpleDateFormat simpleFirstDate=new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-            //Parsing the given String to Date object
-            Date firstDateReduction=simpleFirstDate.parse(firstDate);
-            //set second date
+            String startDate=inputFromClient.nextLine();
             printToClient.println("Enter second date of reduction: ");
-            String secondDate=inputFromClient.next();
-            SimpleDateFormat simpleSecondDate=new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-            Date secondDateReduction=simpleSecondDate.parse(secondDate);
-            printToClient.println(secondDateReduction);
+            String endDate=inputFromClient.nextLine();
             //others variable
             printToClient.println("Enter new percent of reduction: ");
             int percentReduction=inputFromClient.nextInt();
             printToClient.println("Enter id of reduction which will be edit");
             int idReduction=inputFromClient.nextInt();
             //set the variables to ps Object and then execute it
-            ps.setDate(1, (java.sql.Date) firstDateReduction);
-            ps.setDate(2, (java.sql.Date) secondDateReduction);
+            ps.setString(1, startDate);
+            ps.setString(2, endDate);
             ps.setInt(3,percentReduction);
             ps.setInt(4,idReduction);
             ps.execute();
@@ -203,7 +196,7 @@ synchronized public void editProducts(Socket clientSocket){
 
 
  ////////////////////////////////////////////////////ADD REDUCTION//////////////////////////////////////////////////////
-//doesn't work
+//works
     public void createReduction(Socket clientSocket){
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
@@ -213,20 +206,17 @@ synchronized public void editProducts(Socket clientSocket){
             ps=connection.prepareStatement(sql);
             printToClient.println("Add reduction: ");
             //input value in variable
+            //DATES ARE WRITE AS STRING AND THEY ARE ADDED TO DATABASE AS STRING!!!!!!!!!!!!!!!!!
             printToClient.println("Enter startDate: ");
-            String startDate=inputFromClient.next();
-            SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
-            Date startDateReduction=simpleDateFormat.parse(startDate);
+            String startDate=inputFromClient.nextLine();
             printToClient.println("Enter endDate: ");
-            String endDate=inputFromClient.next();
-            SimpleDateFormat simpleDateFormat2=new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
-            Date endDateReduction=simpleDateFormat2.parse(endDate);
+            String endDate=inputFromClient.nextLine();
             printToClient.println("Enter percent of reduction");
             int percentReduction=inputFromClient.nextInt();
             //insert the values in database
-            ps.setDate(1, (java.sql.Date) startDateReduction);
+            ps.setString(1,endDate);
             ps.setInt(2,percentReduction);
-            ps.setDate(3, (java.sql.Date) endDateReduction);
+            ps.setString(3, startDate);
             ps.execute();
             System.out.println("added is successful");
         }catch (IOException e){

@@ -24,15 +24,8 @@ public class CustomerRequests {
     Scanner inputFromClient=null;
 
 //CREATE VARIABLE TOTALAMOUNT
-    private double totalAmount=0;
 
-    public double getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(double totalAmount) {
-        this.totalAmount = totalAmount;
-    }
+    double totalAmount=0;
 
     //////////////////////////////////////////SELECT REQUESTS////////////////////////////////////////////////////////
 
@@ -42,6 +35,9 @@ public class CustomerRequests {
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             connection=MySQLConnection.connection();
+            //set new book price if we have reduction
+            //reduction must be here because it in while cicle will be return error
+            double reduction=reduction(clientSocket);
             String sql="SELECT * FROM book";
             ps=connection.prepareStatement(sql);
             printToClient.println("All products are: ");
@@ -53,8 +49,6 @@ public class CustomerRequests {
                 double bookPrice=rs.getDouble("book_price");
                 String bookPublisher=rs.getString("book_publisher");
                 String bookTitle=rs.getString("book_title");
-                //set new book price if we have reduction
-                int reduction=reduction(clientSocket);
                 if(reduction!=0){
                     bookPrice=bookPrice-bookPrice*(reduction/100);
                 }
@@ -72,12 +66,15 @@ public class CustomerRequests {
     }
 
 
-
+//works
     public void selectProductFromShoppingCart(Socket clientSocket,int idBook,int quality){
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
+            //the reduction must be out from while cycle
+            //added this price multiplq quality to totalAmount
+            double reduction=reduction(clientSocket);
             String sql="SELECT book.book_title,book.book_price FROM book WHERE book_ID=?";
             ps=connection.prepareStatement(sql);
             ps.setInt(1,idBook);
@@ -85,13 +82,11 @@ public class CustomerRequests {
             while(rs.next()){
                 String titleBook=rs.getString("book_title");
                 double price=rs.getDouble("book_price");
-                //added this price multiplq quality to totalAmount
-                int reduction=reduction(clientSocket);
                 if(reduction!=0){
                    price=price-price*(reduction/100);
                 }
-                totalAmount=price*quality;
-                printToClient.print(titleBook+" "+price);
+                totalAmount+=(price*quality);
+                printToClient.print(titleBook+" "+price+" "+quality);
             }
         }catch (IOException e){
             System.out.println(e.getMessage());
@@ -131,18 +126,22 @@ public class CustomerRequests {
     }
 
 //select reduction
-    public int reduction(Socket clientSocket){
+    //works
+    public double reduction(Socket clientSocket){
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             //get today's date
-            DateTimeFormatter date = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime today = LocalDateTime.now();
+            // Define the desired format
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            // Format the LocalDateTime object into a String
+            String todayDate = today.format(formatter);
             //check today's date with start date and end date from every reduction and if have match get percent of reduction
             String sql="SELECT percentReduction FROM reduction WHERE ? BETWEEN startDate AND endDate";
             ps=connection.prepareStatement(sql);
-            ps.setDate(1,Date.valueOf(date.format(now)));
+            ps.setString(1,todayDate);
             rs= ps.executeQuery();
             while(rs.next()){
                 int percentReduction=rs.getInt("percentReduction");
@@ -187,7 +186,7 @@ public class CustomerRequests {
                 double bookPrice=rs.getDouble("book_price");
                 String bookPublisher=rs.getString("book_publisher");
                 String bookTitle=rs.getString("book_title");
-                int reduction=reduction(clientSocket);
+                double reduction=reduction(clientSocket);
                 if(reduction!=0){
                     bookPrice=bookPrice-bookPrice*(reduction/100);
                 }
@@ -223,7 +222,7 @@ public class CustomerRequests {
                 double bookPrice=rs.getDouble("book_price");
                 String bookPublisher=rs.getString("book_publisher");
                 String bookTitle=rs.getString("book_title");
-                int reduction=reduction(clientSocket);
+                double reduction=reduction(clientSocket);
                 if(reduction!=0){
                     bookPrice=bookPrice-bookPrice*(reduction/100);
                 }
@@ -285,17 +284,17 @@ public boolean registerForm(Socket clientSocket){
 
 ////////////////////////////////////////////////////////////////ORDER REQUEST///////////////////////////////////////////////
     //////////////////////////////////////////////EVERYTHINK FOR ORDER///////////////////////////////////////////
-//doesnt work
+//works
 //create order
-public void createOrder(Socket clientSocket, int idCustomer, Date orderDate, int idStore, double totalAmount){
+public void createOrder(Socket clientSocket, int idCustomer, String orderDate, int idStore, double totalAmount){
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
-            String sql="INSERT INTO order(customer_customer_ID,order_date,store_store_ID,total_amount) VALUES(?,?,?,?)";
+            String sql="INSERT INTO `order`(customer_customer_ID,order_date,store_store_ID,total_amount) VALUES(?,?,?,?)";
             ps=connection.prepareStatement(sql);
             ps.setInt(1,idCustomer);
-            ps.setDate(2,orderDate);
+            ps.setString(2,orderDate);
             ps.setInt(3,idStore);
             ps.setDouble(4,totalAmount);
             ps.execute();
@@ -336,12 +335,12 @@ public void createOrder(Socket clientSocket, int idCustomer, Date orderDate, int
 
     //select for order
     //return idOrder
-    public int selectOrderId(Date orderDate,int customerID){
+    public int selectOrderId(String orderDate,int customerID){
         try{
             connection=MySQLConnection.connection();
             String sql="SELECT order_ID FROM order WHERE order_date=? and customer_customer_ID=?";
             ps=connection.prepareStatement(sql);
-            ps.setDate(1,orderDate);
+            ps.setString(1,orderDate);
             ps.setInt(2,customerID);
             ps.execute();
             rs=ps.executeQuery();

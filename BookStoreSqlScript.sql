@@ -300,3 +300,21 @@ INSERT INTO `mydb`.`reduction` (`startDate`,`endDate`,`percentReduction`) VALUES
 INSERT INTO `mydb`.`reduction` (`startDate`,`endDate`,`percentReduction`) VALUES ('2024-12-25 10:30:00', '2024-12-30 10:30:00', 10);
 
 COMMIT;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

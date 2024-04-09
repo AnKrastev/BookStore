@@ -480,7 +480,9 @@ public class StoreSystem {
             idProduct = inputFromClient.nextInt();
             printToClient.println("Enter quality of product");
             quality = inputFromClient.nextInt();
-            shoppingCart.put(idProduct,quality);
+            if(idProduct!=0 && quality!=0) {
+                shoppingCart.put(idProduct, quality);
+            }
         }while(idProduct!=0 && quality!=0);
         //when we end with added articuls to shoppingCart we will return to customerMenu
         customerMenu(customer,clientSocket);
@@ -517,13 +519,18 @@ public void seeShoppingCard(Customer customer,Socket clientSocket){
         HashMap<Integer,Integer> shopingCart=customer.getShoppingCart();
         //create object customerRequest for our requests
         CustomerRequests customerRequests=new CustomerRequests();
-        //get today's date
-        DateTimeFormatter date = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime now = LocalDateTime.now();
+        //gets todays date
+        LocalDateTime today = LocalDateTime.now();
+        // Define the desired format
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        // Format the LocalDateTime object into a String
+        String todayDate = today.format(formatter);
         //create order in database
         printToClient.println("ENter id Store from where this book is");
         int idStore=inputFromClient.nextInt();
-        customerRequests.createOrder(clientSocket,rsCustomer.getInt("customer_ID"), Date.valueOf(date.format(now)),idStore, customerRequests.getTotalAmount());
+        System.out.println(rsCustomer.getInt("customer_ID"));
+        System.out.println(customerRequests.totalAmount);
+        customerRequests.createOrder(clientSocket,rsCustomer.getInt("customer_ID"),todayDate,idStore, customerRequests.totalAmount);
 //after end order user back to the customerMenu
         customerMenu(customer,clientSocket);
     }
@@ -534,11 +541,14 @@ public void seeShoppingCard(Customer customer,Socket clientSocket){
 public void orderDetails(Customer customer,Socket clientSocket) throws SQLException {
         //create object from CustomerRequests
     CustomerRequests customerRequests=new CustomerRequests();
-    //we get today's date
-    DateTimeFormatter date = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    LocalDateTime now = LocalDateTime.now();
+    //gets todays date
+    LocalDateTime today = LocalDateTime.now();
+    // Define the desired format
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    // Format the LocalDateTime object into a String
+    String todayDate = today.format(formatter);
     //set today's date
-        int orderId= customerRequests.selectOrderId(Date.valueOf(date.format(now)), rsCustomer.getInt("customer_ID"));
+        int orderId= customerRequests.selectOrderId(todayDate, rsCustomer.getInt("customer_ID"));
         //get book price
     HashMap<Integer,Integer> shopingCart=customer.getShoppingCart();
     if(shopingCart.isEmpty()){
@@ -551,9 +561,9 @@ public void orderDetails(Customer customer,Socket clientSocket) throws SQLExcept
             //saved date in order details for all book from this order
             customerRequests.createOrderDetail(clientSocket,shopingCart.get(id),orderId,id.intValue(),bookPrice);
             //reduction store quantity dor every book
-            printToClient.println("ENter id Store from where this book is");
-            int idStore=inputFromClient.nextInt();
-            customerRequests.qualityBooksInStore(clientSocket,id.intValue(),idStore,shopingCart.get(id).intValue());
+         //   printToClient.println("ENter id Store from where this book is");
+         //   int idStore=inputFromClient.nextInt();
+            //customerRequests.qualityBooksInStore(clientSocket,id.intValue(),idStore,shopingCart.get(id).intValue());
         }
     }
 }
@@ -580,21 +590,18 @@ public void orderDetails(Customer customer,Socket clientSocket) throws SQLExcept
 //4-da dobawq namalenieto kym produktite(НАМАЛЕНИЯТА КЪМ ПРОДУЦТИТЕ СА ДОБАВЕНИ В ОСНОВНИТЕ ЗАЯВКИ И ОТ ТАМ СЕ ЗАПАЗВАТ ВСИЧКИ ЦЕНИ ЗА ЦЯЛАТА ПРОГРАМА)
     //намаленията ще се показват когато изведем процентите на съответната дата и я извадим от крайаната цена на продукта в самата заявка(тоест сваляме цената на продукта докатп го селектираме по съответната дат
 
-    //5-da dobavq zaqwka za namalqne na broikite v magazinite
-
-
-
-
-//things which i should to do:
-    //3-как да оправя проблема със датите в заявките
-    //da naprawq taka che customera da izbira magazina ot kojto da pazaruva v samoto nachalo
     
-
-  //  errors:
-//имам проблем с извеждането на книгите(извеждат ми се само една или две книги, защото явно ми дава грешка с намалението (ако го коментирам се извеждат всичките)) най-вероятно е заради датите в заявките
+//3-как да оправя проблема със датите в заявките
 
 
 
+
+
+
+
+
+  //  остана ми 1-да изгладя нещата в order и order detail
+    //2- да намалям книгите от магазина
 
 
 }
