@@ -457,7 +457,7 @@ public class AdminRequests extends AdminEmployeeRequests{
 
 //edit customer
     //works
-    public void editCustomer(Socket clientSocket){
+    synchronized public void editCustomer(Socket clientSocket){
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
@@ -502,7 +502,7 @@ public class AdminRequests extends AdminEmployeeRequests{
 
     //edit employee
     //works
-    public void editEmployee(Socket clientSocket){
+    synchronized public void editEmployee(Socket clientSocket){
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());

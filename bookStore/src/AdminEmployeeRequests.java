@@ -124,7 +124,7 @@ public class AdminEmployeeRequests {
 ////////////////////////////////////////////////////////////////EDIT REQUESTS///////////////////////////////////////////////////
     //edit book
     //works
-    public void editProducts(Socket clientSocket){
+synchronized public void editProducts(Socket clientSocket){
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
@@ -154,7 +154,7 @@ public class AdminEmployeeRequests {
 
     //edit reduction
     //doesn't work
-    public void editReduction(Socket clientSocket){
+    synchronized public void editReduction(Socket clientSocket){
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());

@@ -350,6 +350,34 @@ public void createOrder(Socket clientSocket, int idCustomer, Date orderDate, int
         return 0;
     }
 
+
+
+
+    //////////////////////////////////////////////////////reducing the number in the store///////////////////////////////////
+    //reduction the number of product in the store
+    //synchronized this method because every thread will cane edit this variable
+    synchronized public void qualityBooksInStore(Socket clientSocket,int idBook,int idStore,int quantityBook){
+        try{
+            printToClient=new PrintStream(clientSocket.getOutputStream());
+            inputFromClient=new Scanner(clientSocket.getInputStream());
+            connection=MySQLConnection.connection();
+            String sql="UPDATE inventory SET quantity=quantity-? WHERE book_book_ID=? AND store_store_ID=?";
+            ps=connection.prepareStatement(sql);
+            ps.setInt(1,quantityBook);
+            ps.setInt(2,idBook);
+            ps.setInt(3,idStore);
+            ps.execute();
+            System.out.println("Successful");
+            printToClient.println("Successful");
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error with reductionStore's inventory");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+    }
+
 /////////////////////////////////////////////check methods///////////////////////////////////
 
     //check email
