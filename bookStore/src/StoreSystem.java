@@ -441,7 +441,9 @@ public class StoreSystem {
                             seeShoppingCard(customer,clientSocket);
                             break;
                         case 3:
+                            //create order from customer
                             orderCustomer(customer,clientSocket);
+                            //create order details from the same order
                             orderDetails(customer,clientSocket);
                             break;
                     }
@@ -513,8 +515,6 @@ public void seeShoppingCard(Customer customer,Socket clientSocket){
 
 //order and save data for order in database
     public void orderCustomer(Customer customer,Socket clientSocket) throws SQLException {
-        //get the user shoppingCart
-        HashMap<Integer,Integer> shopingCart=customer.getShoppingCart();
         //gets todays date
         LocalDateTime today = LocalDateTime.now();
         // Define the desired format
@@ -524,11 +524,11 @@ public void seeShoppingCard(Customer customer,Socket clientSocket){
         //create order in database
         printToClient.println("ENter id Store from where this book is");
         int idStore=inputFromClient.nextInt();
-        System.out.println(rsCustomer.getInt("customer_ID"));
-        System.out.println(customerRequests.totalAmount);
+        //we say this method if totalAmount is zero
+        if(customerRequests.totalAmount==0){
+            seeShoppingCard(customer,clientSocket);
+        }
         customerRequests.createOrder(clientSocket,rsCustomer.getInt("customer_ID"),todayDate,idStore, customerRequests.totalAmount);
-//after end order user back to the customerMenu
-        customerMenu(customer,clientSocket);
     }
 
 
@@ -554,11 +554,14 @@ public void orderDetails(Customer customer,Socket clientSocket) throws SQLExcept
             double bookPrice=customerRequests.selectPriceBook(id.intValue());
             //saved date in order details for all book from this order
             customerRequests.createOrderDetail(clientSocket,shopingCart.get(id),orderId,id.intValue(),bookPrice);
+            System.out.println("The orderDetail is fine");
             //reduction store quantity dor every book
          //   printToClient.println("ENter id Store from where this book is");
          //   int idStore=inputFromClient.nextInt();
             //customerRequests.qualityBooksInStore(clientSocket,id.intValue(),idStore,shopingCart.get(id).intValue());
         }
+        //after oder the costmer will return to customer Menu bu this will be hapen after all things util order  are successful
+        customerMenu(customer,clientSocket);
     }
 }
 
@@ -597,6 +600,6 @@ public void orderDetails(Customer customer,Socket clientSocket) throws SQLExcept
 
 
     //2- да намалям книгите от магазина
-
+//order details
 
 }

@@ -25,7 +25,7 @@ public class CustomerRequests {
 
 //CREATE VARIABLE TOTALAMOUNT
 
-     double totalAmount=10;
+     double totalAmount=0;
 
 
 
@@ -341,7 +341,7 @@ public void createOrder(Socket clientSocket, int idCustomer, String orderDate, i
     public int selectOrderId(String orderDate,int customerID){
         try{
             connection=MySQLConnection.connection();
-            String sql="SELECT order_ID FROM order WHERE order_date=? and customer_customer_ID=?";
+            String sql="SELECT order_ID FROM `order` WHERE order_date=? and customer_customer_ID=?";
             ps=connection.prepareStatement(sql);
             ps.setString(1,orderDate);
             ps.setInt(2,customerID);
@@ -364,7 +364,7 @@ public void createOrder(Socket clientSocket, int idCustomer, String orderDate, i
     public double selectPriceBook(int idBook){
         try{
             connection=MySQLConnection.connection();
-            String sql="SELECT book_price FROM book WHERE id=?";
+            String sql="SELECT book_price FROM book WHERE book_ID=?";
             ps=connection.prepareStatement(sql);
             ps.setInt(1,idBook);
             rs=ps.executeQuery();
