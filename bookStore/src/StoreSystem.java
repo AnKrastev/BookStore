@@ -522,6 +522,7 @@ public void seeShoppingCard(Customer customer,Socket clientSocket){
         // Format the LocalDateTime object into a String
         String todayDate = today.format(formatter);
         //create order in database
+        //here we added number of magazine from whose we think shopping but order is from all magazines(here we added magazine from where the order is created)
         printToClient.println("ENter id Store from where this book is");
         int idStore=inputFromClient.nextInt();
         //we say this method if totalAmount is zero
@@ -554,8 +555,10 @@ public void orderDetails(Customer customer,Socket clientSocket) throws SQLExcept
             double bookPrice=customerRequests.selectPriceBook(id.intValue());
             //saved date in order details for all book from this order
             customerRequests.createOrderDetail(clientSocket,shopingCart.get(id),orderId,id.intValue(),bookPrice);
-            //reduction store quantity dor every book
+            //reduction store quantity for every book
             int idStore=customerRequests.selectStore(clientSocket,id.intValue());
+            System.out.println("id book is:"+id);
+            System.out.println("id store is:"+idStore);
             customerRequests.qualityBooksInStore(clientSocket,id.intValue(),idStore,shopingCart.get(id).intValue());
         }
         System.out.println("Quantity from store is reduction");
@@ -588,18 +591,18 @@ public void orderDetails(Customer customer,Socket clientSocket) throws SQLExcept
     //намаленията ще се показват когато изведем процентите на съответната дата и я извадим от крайаната цена на продукта в самата заявка(тоест сваляме цената на продукта докатп го селектираме по съответната дат
 
 
-//3-как да оправя проблема със датите в заявките
+//5-как да оправя проблема със датите в заявките
 
-    //  остана ми 1-да изгладя нещата в order и order detail
-
-//order details
-
-
+    // 6- остана ми 1-да изгладя нещата в order и order detail
+//7- да намалям книгите от магазина
+//8-order details
 
 
 
 
-    //2- да намалям книгите от магазина
+
+
+
 
 
 }

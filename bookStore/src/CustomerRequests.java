@@ -107,13 +107,13 @@ public class CustomerRequests {
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             connection=MySQLConnection.connection();
-            String sql="SELECT store_store_ID,MAX(quantity) FROM inventory WHERE book_book_ID=? GROUP BY store_store_ID HAVING MAX(quantity) AND MAX(quantity)>0 ";
+            String sql="SELECT store_store_ID,MAX(quantity) FROM inventory WHERE book_book_ID=? GROUP BY store_store_ID HAVING MAX(quantity) AND MAX(quantity)>0  LIMIT 1 ";
             ps=connection.prepareStatement(sql);
             ps.setInt(1,bookID);
             rs=ps.executeQuery();
             printToClient.println("All stores: ");
             while(rs.next()){
-                int idStore=rs.getInt("store_ID");
+                int idStore=rs.getInt("store_store_ID");
                 return idStore;
             }
             System.out.println("Select of stores is successful");
@@ -399,8 +399,7 @@ public void createOrder(Socket clientSocket, int idCustomer, String orderDate, i
             ps.setInt(2,idBook);
             ps.setInt(3,idStore);
             ps.execute();
-            System.out.println("Successful");
-            printToClient.println("Successful");
+            System.out.println("Successful reduction of product");
         }catch (IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with reductionStore's inventory");
