@@ -25,7 +25,9 @@ public class CustomerRequests {
 
 //CREATE VARIABLE TOTALAMOUNT
 
-    double totalAmount=0;
+     double totalAmount=10;
+
+
 
     //////////////////////////////////////////SELECT REQUESTS////////////////////////////////////////////////////////
 
@@ -88,6 +90,7 @@ public class CustomerRequests {
                 totalAmount+=(price*quality);
                 printToClient.print(titleBook+" "+price+" "+quality);
             }
+            System.out.println(totalAmount);
         }catch (IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with shoppingCart");

@@ -25,6 +25,7 @@ public class StoreSystem {
   private PreparedStatement psCustomer=null;
   private ResultSet rsCustomer=null;
 
+    CustomerRequests customerRequests=new CustomerRequests();
 
 
     public StoreSystem() {
@@ -136,7 +137,6 @@ public class StoreSystem {
                     break;
                 case 2:
                     //ако регистрацията е успешна продължаваме с login метода ако ли не ни връща в start метода
-                    CustomerRequests customerRequests=new CustomerRequests();
                     if(customerRequests.registerForm(clientSocket)){
                         logIn(clientSocket);
                     }else{
@@ -406,7 +406,6 @@ public class StoreSystem {
             inputFromClient=new Scanner(clientSocket.getInputStream());
             printToClient.println("Choose:\n1-View products in store\n2-Shopping\n3-Exit");
             int choiceOption=inputFromClient.nextInt();
-            CustomerRequests customerRequests=new CustomerRequests();
             switch (choiceOption){
                 case 1:
                     printToClient.println("Choose:\n1-Select all products from magazine without filters\n2-Select all products between two price\n3-select the products by price in ascending order");
@@ -469,7 +468,6 @@ public class StoreSystem {
     public void addToShoppingCard(Customer customer,Socket clientSocket){
         //create object CustomerRequests
         HashMap<Integer,Integer> shoppingCart=customer.getShoppingCart();
-        CustomerRequests customerRequests=new CustomerRequests();
         customerRequests.selectProduct(clientSocket);
         //create the variables
         int idProduct;
@@ -494,7 +492,7 @@ public void seeShoppingCard(Customer customer,Socket clientSocket){
         //get the user shoppingCart
         HashMap<Integer,Integer> shopingCart=customer.getShoppingCart();
         //create object customerRequest for our requests
-        CustomerRequests customerRequests=new CustomerRequests();
+
         if(shopingCart.isEmpty()){
             printToClient.println("You don't have anythink articuls in shoppingCart");
         }else {
@@ -517,8 +515,6 @@ public void seeShoppingCard(Customer customer,Socket clientSocket){
     public void orderCustomer(Customer customer,Socket clientSocket) throws SQLException {
         //get the user shoppingCart
         HashMap<Integer,Integer> shopingCart=customer.getShoppingCart();
-        //create object customerRequest for our requests
-        CustomerRequests customerRequests=new CustomerRequests();
         //gets todays date
         LocalDateTime today = LocalDateTime.now();
         // Define the desired format
@@ -539,8 +535,6 @@ public void seeShoppingCard(Customer customer,Socket clientSocket){
 
 //orderDetails
 public void orderDetails(Customer customer,Socket clientSocket) throws SQLException {
-        //create object from CustomerRequests
-    CustomerRequests customerRequests=new CustomerRequests();
     //gets todays date
     LocalDateTime today = LocalDateTime.now();
     // Define the desired format
@@ -590,9 +584,10 @@ public void orderDetails(Customer customer,Socket clientSocket) throws SQLExcept
 //4-da dobawq namalenieto kym produktite(НАМАЛЕНИЯТА КЪМ ПРОДУЦТИТЕ СА ДОБАВЕНИ В ОСНОВНИТЕ ЗАЯВКИ И ОТ ТАМ СЕ ЗАПАЗВАТ ВСИЧКИ ЦЕНИ ЗА ЦЯЛАТА ПРОГРАМА)
     //намаленията ще се показват когато изведем процентите на съответната дата и я извадим от крайаната цена на продукта в самата заявка(тоест сваляме цената на продукта докатп го селектираме по съответната дат
 
-    
+
 //3-как да оправя проблема със датите в заявките
 
+    //  остана ми 1-да изгладя нещата в order и order detail
 
 
 
@@ -600,7 +595,7 @@ public void orderDetails(Customer customer,Socket clientSocket) throws SQLExcept
 
 
 
-  //  остана ми 1-да изгладя нещата в order и order detail
+
     //2- да намалям книгите от магазина
 
 
