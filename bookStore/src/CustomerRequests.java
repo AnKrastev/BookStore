@@ -103,20 +103,18 @@ public class CustomerRequests {
 
     //SELECT STORE
     //works
-    public void selectStore(Socket clientSocket){
+    public int selectStore(Socket clientSocket,int bookID){
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             connection=MySQLConnection.connection();
-            String sql="SELECT * FROM store";
+            String sql="SELECT store_store_ID,MAX(quantity) FROM inventory WHERE book_book_ID=? GROUP BY store_store_ID HAVING MAX(quantity) AND MAX(quantity)>0 ";
             ps=connection.prepareStatement(sql);
+            ps.setInt(1,bookID);
             rs=ps.executeQuery();
             printToClient.println("All stores: ");
             while(rs.next()){
                 int idStore=rs.getInt("store_ID");
-                String addressStore=rs.getString("store_address");
-                String nameStore=rs.getString("store_name");
-                String phoneStore=rs.getString("store_phone");
-                printToClient.println(idStore+" "+addressStore+" "+nameStore+" "+phoneStore);
+                return idStore;
             }
             System.out.println("Select of stores is successful");
         }catch(IOException e){
@@ -126,6 +124,7 @@ public class CustomerRequests {
             System.out.println(e.getMessage());
             printToClient.println("Error");
         }
+        return 0;
     }
 
 //select reduction
@@ -318,11 +317,15 @@ public void createOrder(Socket clientSocket, int idCustomer, String orderDate, i
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
+            double reduction=reduction(clientSocket);
             String sql="INSERT INTO orderdetails(book_book_ID,order_order_ID,quantity,unit_price) VALUES(?,?,?,?)";
             ps=connection.prepareStatement(sql);
             ps.setInt(1,book_id);
             ps.setInt(2,orderId);
             ps.setInt(3,quantity);
+            if(reduction!=0){
+                unitPrice=unitPrice-unitPrice*(reduction/100);
+            }
             ps.setDouble(4,unitPrice);
             ps.execute();
         }catch (IOException e){
@@ -384,7 +387,7 @@ public void createOrder(Socket clientSocket, int idCustomer, String orderDate, i
 
     //////////////////////////////////////////////////////reducing the number in the store///////////////////////////////////
     //reduction the number of product in the store
-    //synchronized this method because every thread will cane edit this variable
+    //synchronized this method because every thread will could edit this variable
     synchronized public void qualityBooksInStore(Socket clientSocket,int idBook,int idStore,int quantityBook){
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());

@@ -554,12 +554,12 @@ public void orderDetails(Customer customer,Socket clientSocket) throws SQLExcept
             double bookPrice=customerRequests.selectPriceBook(id.intValue());
             //saved date in order details for all book from this order
             customerRequests.createOrderDetail(clientSocket,shopingCart.get(id),orderId,id.intValue(),bookPrice);
-            System.out.println("The orderDetail is fine");
             //reduction store quantity dor every book
-         //   printToClient.println("ENter id Store from where this book is");
-         //   int idStore=inputFromClient.nextInt();
-            //customerRequests.qualityBooksInStore(clientSocket,id.intValue(),idStore,shopingCart.get(id).intValue());
+            int idStore=customerRequests.selectStore(clientSocket,id.intValue());
+            customerRequests.qualityBooksInStore(clientSocket,id.intValue(),idStore,shopingCart.get(id).intValue());
         }
+        System.out.println("Quantity from store is reduction");
+        System.out.println("Order details are included");
         //after oder the costmer will return to customer Menu bu this will be hapen after all things util order  are successful
         customerMenu(customer,clientSocket);
     }
@@ -592,7 +592,7 @@ public void orderDetails(Customer customer,Socket clientSocket) throws SQLExcept
 
     //  остана ми 1-да изгладя нещата в order и order detail
 
-
+//order details
 
 
 
@@ -600,6 +600,6 @@ public void orderDetails(Customer customer,Socket clientSocket) throws SQLExcept
 
 
     //2- да намалям книгите от магазина
-//order details
+
 
 }
