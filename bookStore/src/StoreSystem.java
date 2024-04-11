@@ -205,7 +205,7 @@ public class StoreSystem {
                     }
                     break;
                 case 2:
-                    printToClient.println("Choose option:\n1-Select all products\n2-Select all reductions\n3-Select all stores\n4-Select all customers\n5-Select all employees\n6-viewQuantityOfBooksInStore");
+                    printToClient.println("Choose option:\n1-Select all products\n2-Select all reductions\n3-Select all stores\n4-Select all customers\n5-Select all employees\n6-viewQuantityOfBooksInStore\n7-storeTurnover between two dates");
                     int choiceSelectRequests=inputFromClient.nextInt();
                     switch (choiceSelectRequests){
                         case 1:
@@ -230,6 +230,10 @@ public class StoreSystem {
                             break;
                         case 6:
                             adminRequests.viewQuantityOfBooksInStore(clientSocket);
+                            adminMenu(admin,clientSocket);
+                            break;
+                        case 7:
+                            adminRequests.storeTurnover(clientSocket);
                             adminMenu(admin,clientSocket);
                             break;
                         default:

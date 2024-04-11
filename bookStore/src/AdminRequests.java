@@ -88,6 +88,37 @@ public class AdminRequests extends AdminEmployeeRequests{
     }
 
 
+    //store turnover between two dates
+    public void storeTurnover(Socket clientSocket){
+        try{
+            printToClient=new PrintStream(clientSocket.getOutputStream());
+            inputFromClient=new Scanner(clientSocket.getInputStream());
+            connection=MySQLConnection.connection();
+            String sql="SELECT SUM(total_amount) AS total_sum FROM ( SELECT SUM(total_amount) AS total_amount FROM mydb.`order` WHERE order_date BETWEEN ? AND ? AND store_store_ID=? GROUP BY order_ID ) AS subquery";
+            ps=connection.prepareStatement(sql);
+            printToClient.println("Enter start date: ");
+            String startDate=inputFromClient.nextLine();
+            printToClient.println("ENter endDAte: ");
+            String endDate=inputFromClient.nextLine();
+            printToClient.println("Enter the number of shop: ");
+            int idSTore=inputFromClient.nextInt();
+            ps.setString(1,startDate);
+            ps.setString(2,endDate);
+            ps.setInt(3,idSTore);
+            resultSet= ps.executeQuery();
+            while(resultSet.next()){
+                double storeTurnover=resultSet.getDouble("total_sum");
+                printToClient.println("The turnover from "+storeTurnover);
+            }
+            System.out.println("The turnover is successful");
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error with turnover of the store");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            printToClient.println("Error");
+        }
+    }
 
     ////////////////////////////////////////////////////////////////DELETE REQUESTS//////////////////////////////////////
 
