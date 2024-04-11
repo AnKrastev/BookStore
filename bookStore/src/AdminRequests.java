@@ -47,10 +47,13 @@ public class AdminRequests extends AdminEmployeeRequests{
                 String customerEmail=resultSet.getString("Customer_email");
                 printToClient.println(idCustomer+" "+customerName+" "+customerPhone+" "+customerEmail);
             }
+            System.out.println("selectCustomer is successful");
         }catch(SQLException e){
-            System.out.println("Ima problem");
+            System.out.println(e.getMessage());
+            printToClient.println("Error with select customers");
         }catch (IOException e){
             System.out.println(e.getMessage());
+            printToClient.println("Error");
         }
     }
 
@@ -139,9 +142,11 @@ public class AdminRequests extends AdminEmployeeRequests{
            ps.execute();
             printToClient.println("reduction has been delete");
         }catch (SQLException e){
-            System.out.println("There is problem with delete function");
+            System.out.println(e.getMessage());
+            printToClient.println("There is problem with delete function");
         }catch (IOException e){
             System.out.println(e.getMessage());
+            printToClient.println("Error");
         }
     }
 
@@ -160,7 +165,6 @@ public class AdminRequests extends AdminEmployeeRequests{
             ps.setInt(1,idEmployee);
             ps.execute();
             System.out.println("Delete employee is successful");
-            printToClient.println("Delete employee is successful");
         }catch (IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with delete employee");
@@ -185,7 +189,6 @@ public class AdminRequests extends AdminEmployeeRequests{
             ps.setInt(1,idStore);
             ps.execute();
             System.out.println("Deleting store is successful");
-            printToClient.println("Deleting store is successful");
         }catch(IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with deleting store");
@@ -212,7 +215,6 @@ public class AdminRequests extends AdminEmployeeRequests{
             ps.setInt(1,idBook);
             ps.execute();
             System.out.println("Deleting book is successful");
-            printToClient.println("Deleting book is successful");
         }catch (IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with deleting book");
@@ -238,7 +240,6 @@ public class AdminRequests extends AdminEmployeeRequests{
             ps.setInt(1,idCustomer);
             ps.execute();
             System.out.println("Deleting customer is successful");
-            printToClient.println("Deleting customer is successful");
         }catch (IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with deleting customer");
@@ -304,7 +305,7 @@ public class AdminRequests extends AdminEmployeeRequests{
             ps.setInt(6,adminIdStore);
             //start request and if it's true bring out a message for succеss to client's screen
             ps.execute();
-            printToClient.println("The admin is created");
+            System.out.println("Creating admin is successful");
         }catch (IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with create admin");
@@ -356,7 +357,6 @@ public class AdminRequests extends AdminEmployeeRequests{
             ps.setInt(6,idStoreEmployee);
             ps.execute();
             System.out.println("Create employee is successful");
-            printToClient.println("Create employee is successful");
         }catch (IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with create of employee");
@@ -391,7 +391,6 @@ public class AdminRequests extends AdminEmployeeRequests{
             }
             ps.execute();
             System.out.println("Create store is successful");
-            printToClient.println("Create store is successful");
         }catch (IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with create store");
@@ -429,7 +428,6 @@ public class AdminRequests extends AdminEmployeeRequests{
             ps.setInt(5,idPublisherBook);
             ps.execute();
             System.out.println("Create book is successful");
-            printToClient.println("Create book is successful");
         }catch (IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with create product");
@@ -470,7 +468,6 @@ public class AdminRequests extends AdminEmployeeRequests{
             ps.setString(4,passwordCustomer);
             ps.execute();
             System.out.println("Create customer is successful");
-            printToClient.println("Create customer is successful");
         }catch (IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with create customer");
@@ -519,7 +516,6 @@ public class AdminRequests extends AdminEmployeeRequests{
             ps.setInt(5,idCustomer);
             ps.execute();
             System.out.println("Edit customer is successful");
-            printToClient.println("Edit customer is successful");
         }catch (IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with edit customer");
@@ -570,7 +566,6 @@ public class AdminRequests extends AdminEmployeeRequests{
             ps.setInt(7,idEmployee);
             ps.execute();
             System.out.println("Editing employee is successful");
-            printToClient.println("Editing employee is successful");
         }catch (IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with editing employee");

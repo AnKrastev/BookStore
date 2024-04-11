@@ -142,7 +142,6 @@ synchronized public void editProducts(Socket clientSocket){
             ps.setInt(2,bookID);
             ps.execute();
             System.out.println("Successful edit");
-            printToClient.println("Successful edit product");
         }catch(IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with edit of products");
@@ -181,7 +180,6 @@ synchronized public void editProducts(Socket clientSocket){
             ps.setInt(4,idReduction);
             ps.execute();
             System.out.println("Successful edit reduction");
-            printToClient.println("Successful edit reduction");
         }catch (IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with edit reduction");
@@ -248,6 +246,7 @@ synchronized public void editProducts(Socket clientSocket){
                 String nameStore=rs.getString("store_name");
                 printToClient.println("Title: "+titleBook+" Quantity: "+quantityBooks+" store name: "+nameStore);
             }
+            System.out.println("The view quantity of books is successful");
         }catch (IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with view quantity of products");

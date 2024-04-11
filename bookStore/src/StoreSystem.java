@@ -76,14 +76,14 @@ public class StoreSystem {
                     switch (rsEmployeeAdmin.getString("employee_position")) {
                         case "Админ":
                             Admin admin = new Admin(rsEmployeeAdmin.getString("employee.employee_email"), rsEmployeeAdmin.getString("employee.password"), rsEmployeeAdmin.getString("employee.employee_name"), rsEmployeeAdmin.getString("employee.employee_phone"));
+                            System.out.println("Admin with ip: "+clientSocket.getInetAddress()+"is connected");
                             adminMenu(admin,clientSocket);
-                            printToClient.println("Welcome admin   " + admin.getName());
                             flagCorrectUser = false;
                             break;
                         case "Касиер":
                             Employee employee = new Employee(rsEmployeeAdmin.getString("employee.employee_email"), rsEmployeeAdmin.getString("employee.password"), rsEmployeeAdmin.getString("employee.employee_name"), rsEmployeeAdmin.getString("employee.employee_phone"), rsEmployeeAdmin.getString("employee.employee_position"));
+                            System.out.println("Employee with ip: "+clientSocket.getInetAddress()+"is connected");
                             employeeMenu(employee,clientSocket);
-                            printToClient.println("Welcome employee   " + employee.getName());
                             flagCorrectUser = false;
                             break;
                     }
@@ -92,6 +92,7 @@ public class StoreSystem {
             while(rsCustomer.next()){
                 if (email.equals(rsCustomer.getString("customer.Customer_email")) && password.equals(rsCustomer.getString("customer.password"))) {
                     Customer customer = new Customer(rsCustomer.getString("customer.Customer_email"), rsCustomer.getString("customer.password"),rsCustomer.getString("customer.customer_name"),rsCustomer.getString("customer.customer_phone"));
+                    System.out.println("Customer with ip: "+clientSocket.getInetAddress()+"is connected");
                     customerMenu(customer,clientSocket);
                     flagCorrectUser=false;
                     break;
@@ -125,7 +126,7 @@ public class StoreSystem {
         try {
             printToClient = new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
-            printToClient.println("Choose option:\n 1-LogIn\n2-Register");
+            printToClient.println("Choose option:\n1-LogIn\n2-Register");
             int choice=inputFromClient.nextInt();
             switch (choice){
                 case 1:
@@ -162,7 +163,7 @@ public class StoreSystem {
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
-            printToClient.println("Welcome admin"+admin.getName());
+            printToClient.println("Welcome admin "+admin.getName());
             //choose from four type requests
             printToClient.println("Choose option:\n 1-Create Requests\n 2-Select Requests\n 3-Edit Requests\n 4-Delete Requests\n5-Exit");
             int chooseTypeRequest=inputFromClient.nextInt();
@@ -325,7 +326,7 @@ public class StoreSystem {
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
-            printToClient.println("Welcome employee"+employee.getName());
+            printToClient.println("Welcome employee "+employee.getName());
             printToClient.println("choose option:\n1-Create requests\n2-Select requests\n3-Edit requests\n4-Exit");
             AdminEmployeeRequests adminEmployeeRequests=new AdminEmployeeRequests();
             int choiceTypeRequests=inputFromClient.nextInt();
@@ -408,6 +409,7 @@ public class StoreSystem {
         try{
             printToClient=new PrintStream(clientSocket.getOutputStream());
             inputFromClient=new Scanner(clientSocket.getInputStream());
+            printToClient.println("Welcome customer "+customer.getName()+"\n");
             printToClient.println("Choose:\n1-View products in store\n2-Shopping\n3-Exit");
             int choiceOption=inputFromClient.nextInt();
             switch (choiceOption){
@@ -500,7 +502,7 @@ public void seeShoppingCard(Customer customer,Socket clientSocket){
         //create object customerRequest for our requests
 
         if(shopingCart.isEmpty()){
-            printToClient.println("You don't have anythink articuls in shoppingCart");
+            printToClient.println("You don't have anything articles in shoppingCart");
         }else {
             //we loop through it and output the title of the book and its price for the given request in shoppingCart(HashMap)
             for (Integer id : shopingCart.keySet()) {
@@ -527,7 +529,7 @@ public void seeShoppingCard(Customer customer,Socket clientSocket){
         String todayDate = today.format(formatter);
         //create order in database
         //here we added number of magazine from whose we think shopping but order is from all magazines(here we added magazine from where the order is created)
-        printToClient.println("ENter id Store from where this book is");
+        printToClient.println("Enter id Store from where this book is");
         int idStore=inputFromClient.nextInt();
         //we say this method if totalAmount is zero
         if(customerRequests.totalAmount==0){
@@ -551,7 +553,7 @@ public void orderDetails(Customer customer,Socket clientSocket) throws SQLExcept
         //get book price
     HashMap<Integer,Integer> shopingCart=customer.getShoppingCart();
     if(shopingCart.isEmpty()){
-        printToClient.println("You don't have anythink articuls in shoppingCart");
+        printToClient.println("You don't have anything articles in shoppingCart");
     }else {
         //we loop through it and output the title of the book and its price for the given request in shoppingCart(HashMap)
         for (Integer id : shopingCart.keySet()) {
@@ -561,13 +563,11 @@ public void orderDetails(Customer customer,Socket clientSocket) throws SQLExcept
             customerRequests.createOrderDetail(clientSocket,shopingCart.get(id),orderId,id.intValue(),bookPrice);
             //reduction store quantity for every book
             int idStore=customerRequests.selectStore(clientSocket,id.intValue());
-            System.out.println("id book is:"+id);
-            System.out.println("id store is:"+idStore);
             customerRequests.qualityBooksInStore(clientSocket,id.intValue(),idStore,shopingCart.get(id).intValue());
         }
         System.out.println("Quantity from store is reduction");
         System.out.println("Order details are included");
-        //after oder the costmer will return to customer Menu bu this will be hapen after all things util order  are successful
+        //after oder the customer will return to customer Menu bu this will be hapen after all things util order  are successful
         customerMenu(customer,clientSocket);
     }
 }

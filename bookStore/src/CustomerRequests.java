@@ -42,7 +42,7 @@ public class CustomerRequests {
             double reduction=reduction(clientSocket);
             String sql="SELECT * FROM book";
             ps=connection.prepareStatement(sql);
-            printToClient.println("All products are: ");
+            printToClient.println("All products are:\n");
             //get results and show them to the client
             rs=ps.executeQuery();
             while(rs.next()){
@@ -90,7 +90,7 @@ public class CustomerRequests {
                 totalAmount+=(price*quality);
                 printToClient.print(titleBook+" "+price+" "+quality);
             }
-            System.out.println(totalAmount);
+            System.out.println("Selecting the product is successful");
         }catch (IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with shoppingCart");
@@ -111,7 +111,7 @@ public class CustomerRequests {
             ps=connection.prepareStatement(sql);
             ps.setInt(1,bookID);
             rs=ps.executeQuery();
-            printToClient.println("All stores: ");
+            printToClient.println("All stores:\n");
             while(rs.next()){
                 int idStore=rs.getInt("store_store_ID");
                 return idStore;
@@ -150,6 +150,7 @@ public class CustomerRequests {
                 //return percent reduction
                 return percentReduction;
             }
+            System.out.println("The reduction is selected");
         }catch (IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with reduction");
@@ -172,6 +173,8 @@ public class CustomerRequests {
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             String sql="SELECT * FROM book WHERE book_price BETWEEN ? AND ?";
+            //get reduction
+            double reduction=reduction(clientSocket);
             ps=connection.prepareStatement(sql);
             printToClient.println("Filters product between two prices....");
             printToClient.println("Enter min price of product: ");
@@ -188,14 +191,12 @@ public class CustomerRequests {
                 double bookPrice=rs.getDouble("book_price");
                 String bookPublisher=rs.getString("book_publisher");
                 String bookTitle=rs.getString("book_title");
-                double reduction=reduction(clientSocket);
                 if(reduction!=0){
                     bookPrice=bookPrice-bookPrice*(reduction/100);
                 }
                 printToClient.println(bookId+" "+bookAuthor+" "+bookPrice+" "+bookPublisher+" "+bookTitle);
             }
             System.out.println("Filtering of product is successful");
-            printToClient.println("Filtering of product is successful");
         }catch (IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with filter books");
@@ -215,6 +216,8 @@ public class CustomerRequests {
             inputFromClient=new Scanner(clientSocket.getInputStream());
             connection=MySQLConnection.connection();
             String sql="SELECT * FROM book ORDER BY book_price";
+            //get reduction
+            double reduction=reduction(clientSocket);
             ps=connection.prepareStatement(sql);
             printToClient.println("Sort books....");
             rs= ps.executeQuery();
@@ -224,7 +227,6 @@ public class CustomerRequests {
                 double bookPrice=rs.getDouble("book_price");
                 String bookPublisher=rs.getString("book_publisher");
                 String bookTitle=rs.getString("book_title");
-                double reduction=reduction(clientSocket);
                 if(reduction!=0){
                     bookPrice=bookPrice-bookPrice*(reduction/100);
                 }
@@ -271,7 +273,6 @@ public boolean registerForm(Socket clientSocket){
         ps.setString(4,passwordCustomer);
         ps.execute();
         System.out.println("Create customer is successful");
-        printToClient.println("Create customer is successful");
         return true;
     }catch (IOException e){
         System.out.println(e.getMessage());
@@ -300,6 +301,7 @@ public void createOrder(Socket clientSocket, int idCustomer, String orderDate, i
             ps.setInt(3,idStore);
             ps.setDouble(4,totalAmount);
             ps.execute();
+            System.out.println("Order is successful");
             printToClient.println("Order is successful");
         }catch (IOException e){
             System.out.println(e.getMessage());
@@ -328,6 +330,7 @@ public void createOrder(Socket clientSocket, int idCustomer, String orderDate, i
             }
             ps.setDouble(4,unitPrice);
             ps.execute();
+            System.out.println("Order details are added");
         }catch (IOException e){
             System.out.println(e.getMessage());
             printToClient.println("Error with orderDetails");
@@ -354,6 +357,7 @@ public void createOrder(Socket clientSocket, int idCustomer, String orderDate, i
                 int idOrder=rs.getInt("order_ID");
                 return idOrder;
             }
+            System.out.println("Order id is selected");
         }catch (Exception e){
             System.out.println(e.getMessage());
             printToClient.println("Error");
@@ -375,6 +379,7 @@ public void createOrder(Socket clientSocket, int idCustomer, String orderDate, i
                 double bookPrice=rs.getDouble("book_price");
                 return bookPrice;
             }
+            System.out.println("price book is selected");
         }catch (Exception e){
             System.out.println(e.getMessage());
             printToClient.println("Error");
